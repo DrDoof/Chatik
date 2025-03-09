@@ -26,8 +26,19 @@ COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 # Install thelounge.
 RUN apk --update --no-cache --virtual build-deps add python3 build-base git && \
-    ln -sf python3 /usr/bin/python && \
-    yarn --non-interactive --frozen-lockfile global add thelounge@${THELOUNGE_VERSION} && \
-    yarn --non-interactive cache clean && \
-    apk del --purge build-deps && \
+    ln -sf python3 /usr/bin/python 
+
+WORKDIR /app
+
+RUN git clone --depth=1 https://github.com/DrDoof/Chatik.git . && \
+    yarn add npm-run-all webpack webpack-cli typescript --dev && \
+    yarn add ts-node @babel/register @babel/core esbuild-register sucrase @swc/register --dev && \
+    yarn add webpack webpack-cli copy-webpack-plugin fork-ts-checker-webpack-plugin mini-css-extract-plugin vue-loader --dev && \
+    yarn install --frozen-lockfile && \
+    yarn build && \
+    yarn cache clean
+#    yarn --non-interactive --frozen-lockfile global add thelounge@${THELOUNGE_VERSION} && \
+#    yarn --non-interactive cache clean && \
+
+RUN  apk del --purge build-deps && \
     rm -rf /root/.cache /tmp /usr/bin/python
