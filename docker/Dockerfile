@@ -28,7 +28,7 @@ COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN apk --update --no-cache --virtual build-deps add python3 build-base git && \
     ln -sf python3 /usr/bin/python 
 
-WORKDIR /app
+WORKDIR ${THELOUNGE_HOME}
 
 RUN git clone --depth=1 https://github.com/DrDoof/Chatik.git . && \
     yarn add npm-run-all webpack webpack-cli typescript --dev && \
