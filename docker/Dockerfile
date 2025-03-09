@@ -16,6 +16,7 @@ ENV THELOUNGE_HOME "/var/opt/thelounge"
 VOLUME "${THELOUNGE_HOME}"
 
 ENV PATH="${THELOUNGE_HOME}:${PATH}"
+ENV PATH="${THELOUNGE_HOME}/node_modules/.bin:${PATH}"
 
 # Expose HTTP.
 ENV PORT 9000
