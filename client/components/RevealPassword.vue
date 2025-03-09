@@ -8,10 +8,10 @@
 				'reveal-password tooltipped tooltipped-n tooltipped-no-delay',
 				{'reveal-password-visible': isVisible},
 			]"
-			:aria-label="isVisible ? 'Hide password' : 'Show password'"
+			:aria-label="isVisible ? 'Ukryj hasło' : 'Pokaż hasło'"
 			@click="onClick"
 		>
-			<span :aria-label="isVisible ? 'Hide password' : 'Show password'" />
+			<span :aria-label="isVisible ? 'Ukryj hasło' : 'Pokaż hasło'" />
 		</span>
 	</div>
 </template>

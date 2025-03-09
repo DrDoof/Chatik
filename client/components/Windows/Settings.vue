@@ -1,5 +1,5 @@
 <template>
-	<div id="settings" class="window" role="tabpanel" aria-label="Settings">
+	<div id="settings" class="window" role="tabpanel" aria-label="Ustawienia">
 		<div class="header">
 			<SidebarToggle />
 		</div>

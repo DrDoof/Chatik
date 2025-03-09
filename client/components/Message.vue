@@ -74,13 +74,13 @@
 			<span class="content" dir="auto">
 				<span
 					v-if="message.showInActive"
-					aria-label="This message was shown in your active channel"
+					aria-label="Ta wiadomość została wyświetlona w Twoim aktywnym kanale"
 					class="msg-shown-in-active tooltipped tooltipped-e"
 					><span></span
 				></span>
 				<span
 					v-if="message.statusmsgGroup"
-					:aria-label="`This message was only shown to users with ${message.statusmsgGroup} mode`"
+					:aria-label="`Ta wiadomość była wyświetlana tylko użytkownikom z trybem ${message.statusmsgGroup}`"
 					class="msg-statusmsg tooltipped tooltipped-e"
 					><span>{{ message.statusmsgGroup }}</span></span
 				>

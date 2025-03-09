@@ -1,22 +1,22 @@
 <template>
-	<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in">
+	<div id="sign-in" class="window" role="tabpanel" aria-label="Logowanie">
 		<form class="container" method="post" action="" @submit="onSubmit">
 			<img
 				src="img/logo-vertical-transparent-bg.svg"
 				class="logo"
-				alt="The Lounge"
+				alt="Chatik"
 				width="256"
 				height="170"
 			/>
 			<img
 				src="img/logo-vertical-transparent-bg-inverted.svg"
 				class="logo-inverted"
-				alt="The Lounge"
+				alt="Chatik"
 				width="256"
 				height="170"
 			/>
 
-			<label for="signin-username">Username</label>
+			<label for="signin-username">Nick</label>
 			<input
 				id="signin-username"
 				v-model="username"
@@ -31,7 +31,7 @@
 			/>
 
 			<div class="password-container">
-				<label for="signin-password">Password</label>
+				<label for="signin-password">Hasło</label>
 				<RevealPassword v-slot:default="slotProps">
 					<input
 						id="signin-password"
@@ -46,9 +46,9 @@
 				</RevealPassword>
 			</div>
 
-			<div v-if="errorShown" class="error">Authentication failed.</div>
+			<div v-if="errorShown" class="error">Błąd uwierzytelnienia.</div>
 
-			<button :disabled="inFlight" type="submit" class="btn">Sign in</button>
+			<button :disabled="inFlight" type="submit" class="btn">Zaloguj</button>
 		</form>
 	</div>
 </template>

@@ -5,18 +5,18 @@
 				<img
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg.svg`"
 					class="logo"
-					alt="The Lounge"
+					alt="Chatik"
 					role="presentation"
 				/>
 				<img
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg-inverted.svg`"
 					class="logo-inverted"
-					alt="The Lounge"
+					alt="Chatik"
 					role="presentation"
 				/>
 				<span
 					v-if="isDevelopment"
-					title="The Lounge has been built in development mode"
+					title="Chatik został uruchomiony w trybie deweloperskim"
 					:style="{
 						backgroundColor: '#ff9e18',
 						color: '#000',
@@ -32,7 +32,7 @@
 		<footer id="footer">
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
-				aria-label="Connect to network"
+				aria-label="Połącz z siecią"
 				><router-link
 					v-slot:default="{navigate, isActive}"
 					to="/connect"
@@ -46,7 +46,7 @@
 						@keypress.enter="navigate"
 					/> </router-link
 			></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Ustawienia"
 				><router-link
 					v-slot:default="{navigate, isActive}"
 					to="/settings"
@@ -64,8 +64,8 @@
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				:aria-label="
 					store.state.serverConfiguration?.isUpdateAvailable
-						? 'Help\n(update available)'
-						: 'Help'
+						? 'Pomoc\n(aktualizacja dostępna)'
+						: 'Pomoc'
 				"
 				><router-link
 					v-slot:default="{navigate, isActive}"

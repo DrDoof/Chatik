@@ -40,8 +40,8 @@ export default defineComponent({
 		const friendlyDate = () => {
 			// See http://momentjs.com/docs/#/displaying/calendar-time/
 			return dayjs(props.message.time).calendar(null, {
-				sameDay: "[Today]",
-				lastDay: "[Yesterday]",
+				sameDay: "[Dzisiaj]",
+				lastDay: "[Wczoraj]",
 				lastWeek: "D MMMM YYYY",
 				sameElse: "D MMMM YYYY",
 			});

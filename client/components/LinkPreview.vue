@@ -100,16 +100,16 @@
 			</template>
 			<template v-else-if="link.type === 'error'">
 				<em v-if="link.error === 'image-too-big'">
-					This image is larger than {{ imageMaxSize }} and cannot be previewed.
-					<a :href="link.link" target="_blank" rel="noopener">Click here</a>
-					to open it in a new window.
+					Ten obraz jest większy niż {{ imageMaxSize }} i nie może zostać podglądnięty.
+					<a :href="link.link" target="_blank" rel="noopener">Kliknij tutaj</a>
+					aby otworzyć go w nowym oknie.
 				</em>
 				<template v-else-if="link.error === 'message'">
 					<div>
 						<em>
-							A preview could not be loaded.
-							<a :href="link.link" target="_blank" rel="noopener">Click here</a>
-							to open it in a new window.
+							Nie udało się załadować podglądu.
+							<a :href="link.link" target="_blank" rel="noopener">Kliknij tutaj</a>
+							aby otworzyć go w nowym oknie.
 						</em>
 						<br />
 						<pre class="prefetch-error">{{ link.message }}</pre>
@@ -183,7 +183,7 @@ export default defineComponent({
 		const container = ref<HTMLDivElement | null>(null);
 
 		const moreButtonLabel = computed(() => {
-			return isContentShown.value ? "Less" : "More";
+			return isContentShown.value ? "Mniej" : "Więcej";
 		});
 
 		const imageMaxSize = computed(() => {

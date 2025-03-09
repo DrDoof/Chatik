@@ -2,8 +2,8 @@
 	<table class="ignore-list">
 		<thead>
 			<tr>
-				<th class="hostmask">Hostmask</th>
-				<th class="when">Ignored At</th>
+				<th class="hostmask">Maska hosta</th>
+				<th class="when">Ignorowany od</th>
 			</tr>
 		</thead>
 		<tbody>

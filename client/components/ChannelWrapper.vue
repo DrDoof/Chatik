@@ -67,17 +67,17 @@ export default defineComponent({
 
 			if (props.channel.unread > 0) {
 				if (props.channel.unread > 1) {
-					extra.push(`${props.channel.unread} unread messages`);
+					extra.push(`${props.channel.unread} nieprzeczytane wiadomości`);
 				} else {
-					extra.push(`${props.channel.unread} unread message`);
+					extra.push(`${props.channel.unread} nieprzeczytana wiadomość`);
 				}
 			}
 
 			if (props.channel.highlight > 0) {
 				if (props.channel.highlight > 1) {
-					extra.push(`${props.channel.highlight} mentions`);
+					extra.push(`${props.channel.highlight} wzmianki`);
 				} else {
-					extra.push(`${props.channel.highlight} mention`);
+					extra.push(`${props.channel.highlight} wzmianka`);
 				}
 			}
 

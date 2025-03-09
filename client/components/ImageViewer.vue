@@ -8,22 +8,22 @@
 		@click="onClick"
 	>
 		<template v-if="link !== null">
-			<button class="close-btn" aria-label="Close"></button>
+			<button class="close-btn" aria-label="Zamknij"></button>
 
 			<button
 				v-if="previousImage"
 				class="previous-image-btn"
-				aria-label="Previous image"
+				aria-label="Poprzedni obraz"
 				@click.stop="previous"
 			></button>
 			<button
 				v-if="nextImage"
 				class="next-image-btn"
-				aria-label="Next image"
+				aria-label="Następny obraz"
 				@click.stop="next"
 			></button>
 
-			<a class="open-btn" :href="link.link" target="_blank" rel="noopener"></a>
+			<a class="open-btn" :href="link.link" target="_blank" rel="noopener" aria-label="Otwórz obraz w nowej karcie"></a>
 
 			<img
 				ref="image"

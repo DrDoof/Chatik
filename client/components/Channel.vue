@@ -12,17 +12,17 @@
 			<span
 				v-if="channel.state === 0"
 				class="parted-channel-tooltip tooltipped tooltipped-w"
-				aria-label="Not currently joined"
+				aria-label="Nie jesteś obecnie na kanale"
 			>
 				<span class="parted-channel-icon" />
 			</span>
-			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Leave">
-				<button class="close" aria-label="Leave" @click.stop="close" />
+			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Opuść">
+				<button class="close" aria-label="Opuść" @click.stop="close" />
 			</span>
 		</template>
 		<template v-else>
-			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
-				<button class="close" aria-label="Close" @click.stop="close" />
+			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Zamknij">
+				<button class="close" aria-label="Zamknij" @click.stop="close" />
 			</span>
 		</template>
 	</ChannelWrapper>

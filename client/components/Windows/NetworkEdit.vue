@@ -36,7 +36,7 @@ export default defineComponent({
 			disabled.value = true;
 			socket.emit("network:edit", data);
 
-			// TODO: move networks to vuex and update state when the network info comes in
+			// TODO: przenieść sieci do Vuex i zaktualizować stan po otrzymaniu informacji o sieci
 			const network = store.getters.findNetwork(data.uuid);
 
 			if (network) {

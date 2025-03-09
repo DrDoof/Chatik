@@ -1,14 +1,14 @@
 <template>
 	<div>
 		<div v-if="canRegisterProtocol || hasInstallPromptEvent">
-			<h2>Native app</h2>
+			<h2>Aplikacja natywna</h2>
 			<button
 				v-if="hasInstallPromptEvent"
 				type="button"
 				class="btn"
 				@click.prevent="nativeInstallPrompt"
 			>
-				Add The Lounge to Home screen
+				Dodaj Chatika do ekranu startowego
 			</button>
 			<button
 				v-if="canRegisterProtocol"
@@ -20,7 +20,7 @@
 			</button>
 		</div>
 		<div v-if="store.state.serverConfiguration?.fileUpload">
-			<h2>File uploads</h2>
+			<h2>Wgrywanie plików</h2>
 			<div>
 				<label class="opt">
 					<input
@@ -28,11 +28,11 @@
 						type="checkbox"
 						name="uploadCanvas"
 					/>
-					Attempt to remove metadata from images before uploading
+					Próbuj usuać metadane pliku przed załadowaniem
 					<span
 						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="This option renders the image into a canvas element to remove metadata from the image.
-	This may break orientation if your browser does not support that."
+						aria-label="To ustawienie renderuje obraz w elemencie canvas, aby usunąć metadane z pliku.
+	Może to jednak spowodować problemy z orientacją obrazu, jeśli przeglądarka nie obsługuje tej funkcji."
 					>
 						<button class="extra-help" />
 					</span>
@@ -40,49 +40,48 @@
 			</div>
 		</div>
 		<div v-if="!store.state.serverConfiguration?.public">
-			<h2>Settings synchronisation</h2>
+			<h2>Synchronizacja ustawień</h2>
 			<label class="opt">
 				<input
 					:checked="store.state.settings.syncSettings"
 					type="checkbox"
 					name="syncSettings"
 				/>
-				Synchronize settings with other clients
+				Synchronizuj ustawienia z innymi klientami
 			</label>
 			<template v-if="!store.state.settings.syncSettings">
 				<div v-if="store.state.serverHasSettings" class="settings-sync-panel">
 					<p>
-						<strong>Warning:</strong> Checking this box will override the settings of
-						this client with those stored on the server.
+						<strong>Warning:</strong> Zaznaczenie tego pola spowoduje zastąpienie ustawień 
+						tego klienta tymi zapisanymi na serwerze.
 					</p>
 					<p>
-						Use the button below to enable synchronization, and override any settings
-						already synced to the server.
+						Użyj poniższego przycisku, aby włączyć synchronizację i zastąpić wszystkie 
+						ustawienia już zsynchronizowane z serwerem.
 					</p>
 					<button type="button" class="btn btn-small" @click="onForceSyncClick">
-						Sync settings and enable
+						Włącz i synchonizuj ustawienia
 					</button>
 				</div>
 				<div v-else class="settings-sync-panel">
 					<p>
-						<strong>Warning:</strong> No settings have been synced before. Enabling this
-						will sync all settings of this client as the base for other clients.
+						<strong>Uwaga:</strong> Nie zsynchronizowano jeszcze żadnych ustawień. Włączenie tej opcji spowoduje zsynchronizowanie wszystkich ustawień tego klienta jako bazowych dla innych klientów.
 					</p>
 				</div>
 			</template>
 		</div>
 		<div v-if="!store.state.serverConfiguration?.public">
-			<h2>Automatic away message</h2>
+			<h2>Automatyczna wiadomość o nieobecności</h2>
 
 			<label class="opt">
-				<label for="awayMessage" class="sr-only">Automatic away message</label>
+				<label for="awayMessage" class="sr-only">Automatyczna wiadomość o nieobecności</label>
 				<input
 					id="awayMessage"
 					:value="store.state.settings.awayMessage"
 					type="text"
 					name="awayMessage"
 					class="input"
-					placeholder="Away message if The Lounge is not open"
+					placeholder="Automatyczna wiadomość, gdy Chatik nie jest otwarty"
 				/>
 			</label>
 		</div>

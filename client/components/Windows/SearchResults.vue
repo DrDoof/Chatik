@@ -10,20 +10,20 @@
 			<div
 				class="chat-view"
 				data-type="search-results"
-				aria-label="Search results"
+				aria-label="Wyniki wyszukiwania"
 				role="tabpanel"
 			>
 				<div v-if="network && channel" class="header">
 					<SidebarToggle />
 					<span class="title"
-						>Searching in <span class="channel-name">{{ channel.name }}</span> for</span
+						>Wyszukiwanie w <span class="channel-name">{{ channel.name }}</span> dla frazy</span
 					>
 					<span class="topic">{{ route.query.q }}</span>
 					<MessageSearchForm :network="network" :channel="channel" />
 					<button
 						class="close"
-						aria-label="Close search window"
-						title="Close search window"
+						aria-label="Zamknij okno wyszukiwania"
+						title="Zamknij okno wyszukiwania"
 						@click="closeSearch"
 					/>
 				</div>
@@ -39,8 +39,8 @@
 								class="btn"
 								@click="onShowMoreClick"
 							>
-								<span v-if="store.state.messageSearchPendingQuery">Loading…</span>
-								<span v-else>Show older messages</span>
+								<span v-if="store.state.messageSearchPendingQuery">Ładowanie…</span>
+								<span v-else>Pokaż starsze wiadomości</span>
 							</button>
 						</div>
 
@@ -48,10 +48,10 @@
 							v-if="store.state.messageSearchPendingQuery && !offset"
 							class="search-status"
 						>
-							Searching…
+							Trwa wyszukiwanie…
 						</div>
 						<div v-else-if="!messages.length && !offset" class="search-status">
-							No results found.
+							Nie znaleziono wyników.
 						</div>
 						<div
 							class="messages"

@@ -2,9 +2,9 @@
 	<table class="ban-list">
 		<thead>
 			<tr>
-				<th class="hostmask">Banned</th>
-				<th class="banned_by">Banned By</th>
-				<th class="banned_at">Banned At</th>
+				<th class="hostmask">Zbanowany</th>
+				<th class="banned_by">Zbanowany przez</th>
+				<th class="banned_at">Data zbanowania</th>
 			</tr>
 		</thead>
 		<tbody>

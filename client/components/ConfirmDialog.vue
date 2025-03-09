@@ -6,7 +6,7 @@
 				<p>{{ data?.text }}</p>
 			</div>
 			<div class="confirm-buttons">
-				<button class="btn btn-cancel" @click="close(false)">Cancel</button>
+				<button class="btn btn-cancel" @click="close(false)">Anuluj</button>
 				<button class="btn btn-danger" @click="close(true)">{{ data?.button }}</button>
 			</div>
 		</div>

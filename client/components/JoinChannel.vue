@@ -14,10 +14,10 @@
 			type="text"
 			class="input"
 			name="channel"
-			placeholder="Channel"
+			placeholder="Kanał"
 			pattern="[^\s]+"
 			maxlength="200"
-			title="The channel name may not contain spaces"
+			title="Nazwa kanału nie może zawierać spacji"
 			required
 		/>
 		<input
@@ -25,13 +25,13 @@
 			type="password"
 			class="input"
 			name="key"
-			placeholder="Password (optional)"
+			placeholder="Hasło (opcjonalne)"
 			pattern="[^\s]+"
 			maxlength="200"
-			title="The channel password may not contain spaces"
+			title="Hasło kanału nie może zawierać spacji"
 			autocomplete="new-password"
 		/>
-		<button type="submit" class="btn btn-small">Join</button>
+		<button type="submit" class="btn btn-small">Dołącz</button>
 	</form>
 </template>
 

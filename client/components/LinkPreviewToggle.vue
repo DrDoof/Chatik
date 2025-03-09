@@ -20,7 +20,7 @@ export default defineComponent({
 	emits: ["toggle-link-preview"],
 	setup(props, {emit}) {
 		const ariaLabel = computed(() => {
-			return props.link.shown ? "Collapse preview" : "Expand preview";
+			return props.link.shown ? "Zwiń podgląd" : "Rozwiń podgląd";
 		});
 
 		const onClick = () => {

@@ -16,14 +16,14 @@
 			<span
 				v-if="network.status.connected && !network.status.secure"
 				class="not-secure-tooltip tooltipped tooltipped-w"
-				aria-label="Insecure connection"
+				aria-label="Niezabezpieczone połączenie"
 			>
 				<span class="not-secure-icon" />
 			</span>
 			<span
 				v-if="!network.status.connected"
 				class="not-connected-tooltip tooltipped tooltipped-w"
-				aria-label="Disconnected"
+				aria-label="Rozłączony"
 			>
 				<span class="not-connected-icon" />
 			</span>
@@ -74,7 +74,7 @@ export default defineComponent({
 		});
 
 		const joinChannelLabel = computed(() => {
-			return props.isJoinChannelShown ? "Cancel" : "Join a channel…";
+			return props.isJoinChannelShown ? "Anuluj" : "Dołącz do kanału…";
 		});
 
 		const unreadCount = computed(() => {
@@ -86,7 +86,7 @@ export default defineComponent({
 		};
 
 		const getExpandLabel = (network: ClientNetwork) => {
-			return network.isCollapsed ? "Expand" : "Collapse";
+			return network.isCollapsed ? "Rozwiń" : "Zwiń";
 		};
 
 		return {

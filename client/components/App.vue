@@ -110,7 +110,7 @@ export default defineComponent({
 		};
 
 		const msUntilNextDay = () => {
-			// Compute how many milliseconds are remaining until the next day starts
+			// Oblicz, ile milisekund pozostało do rozpoczęcia następnego dnia
 			const today = new Date();
 			const tommorow = new Date(
 				today.getFullYear(),
@@ -129,8 +129,8 @@ export default defineComponent({
 				store.commit("sidebarOpen", storage.get("thelounge.state.sidebar") !== "false");
 			}
 
-			// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
-			// user list state, close it by default
+			// Jeśli The Lounge jest otwierane na małym ekranie (mniej niż 1024px) i nie mamy zapisanego
+			// stanu listy użytkowników, zamknij ją domyślnie
 			if (viewportWidth >= 1024 && isUserlistOpen !== "true" && isUserlistOpen !== "false") {
 				isUserlistOpen = "true";
 			}
@@ -152,10 +152,10 @@ export default defineComponent({
 
 			window.addEventListener("resize", debouncedResize.value, {passive: true});
 
-			// Emit a daychange event every time the day changes so date markers know when to update themselves
+			// Emituj zdarzenie zmiany dnia za każdym razem, gdy zmienia się dzień, aby znaczniki daty wiedziały, kiedy się zaktualizować
 			const emitDayChange = () => {
 				eventbus.emit("daychange");
-				// This should always be 24h later but re-computing exact value just in case
+				// Powinno to być zawsze 24 godziny później, ale na wszelki wypadek ponownie obliczamy dokładną wartość
 				dayChangeTimeout.value = setTimeout(emitDayChange, msUntilNextDay());
 			};
 

@@ -14,7 +14,7 @@
 					type="checkbox"
 					name="showSeconds"
 				/>
-				Include seconds in timestamp
+				Wyświetlaj sekundy przy linijkach czatu
 			</label>
 		</div>
 		<div>
@@ -24,21 +24,21 @@
 					type="checkbox"
 					name="use12hClock"
 				/>
-				Use 12-hour timestamps
+				Uzyaj zegara 12-godzinnego
 			</label>
 		</div>
 		<template v-if="store.state.serverConfiguration?.prefetch">
-			<h2>Link previews</h2>
+			<h2>Podgląd linków</h2>
 			<div>
 				<label class="opt">
 					<input :checked="store.state.settings.media" type="checkbox" name="media" />
-					Auto-expand media
+					Podgląd mediów
 				</label>
 			</div>
 			<div>
 				<label class="opt">
 					<input :checked="store.state.settings.links" type="checkbox" name="links" />
-					Auto-expand websites
+					Podgląd witryn
 				</label>
 			</div>
 		</template>
@@ -59,7 +59,7 @@
 					name="statusMessages"
 					value="shown"
 				/>
-				Show all status messages individually
+				Pokazuj wiadomości statusowe pojedynczo
 			</label>
 			<label class="opt">
 				<input
@@ -68,7 +68,7 @@
 					name="statusMessages"
 					value="condensed"
 				/>
-				Condense status messages together
+				Grupuj wiadomości statusowe
 			</label>
 			<label class="opt">
 				<input
@@ -77,10 +77,10 @@
 					name="statusMessages"
 					value="hidden"
 				/>
-				Hide all status messages
+				Ukryj wszystkie wiadomości statusowe
 			</label>
 		</div>
-		<h2>Visual Aids</h2>
+		<h2>Dodatki </h2>
 		<div>
 			<label class="opt">
 				<input
@@ -88,7 +88,7 @@
 					type="checkbox"
 					name="coloredNicks"
 				/>
-				Enable colored nicknames
+				Włącz kolorowanie nicków
 			</label>
 			<label class="opt">
 				<input
@@ -96,16 +96,16 @@
 					type="checkbox"
 					name="autocomplete"
 				/>
-				Enable autocomplete
+				Włącz autouzupełnianie
 			</label>
 		</div>
 		<div>
 			<label class="opt">
 				<label for="nickPostfix" class="opt">
-					Nick autocomplete postfix
+					Przyrostek autouzupełniania nicku
 					<span
 						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="Nick autocomplete postfix (for example a comma)"
+						aria-label="Przyrostek autouzupełniania nicku (np. przecinek, dwukropek, spacja)"
 					>
 						<button class="extra-help" />
 					</span>
@@ -121,7 +121,7 @@
 			</label>
 		</div>
 
-		<h2>Theme</h2>
+		<h2>Skórka</h2>
 		<div>
 			<label for="theme-select" class="sr-only">Theme</label>
 			<select
@@ -141,16 +141,16 @@
 		</div>
 
 		<div>
-			<h2>Custom Stylesheet</h2>
+			<h2>Własna skórka</h2>
 			<label for="user-specified-css-input" class="sr-only">
-				Custom stylesheet. You can override any style with CSS here.
+				Własna skórka. Mozesz nadpisać styl CSS swoim wklejając go w to pole.
 			</label>
 			<textarea
 				id="user-specified-css-input"
 				:value="store.state.settings.userStyles"
 				class="input"
 				name="userStyles"
-				placeholder="/* You can override any style with CSS here */"
+				placeholder="/* Mozesz nadpisać styl CSS swoim wklejając go w to pole */"
 			/>
 		</div>
 	</div>

@@ -19,7 +19,7 @@
 			v-if="store.state.serverConfiguration?.fileUpload"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Upload file"
+			aria-label="Prześlij plik"
 			@click="openFileUpload"
 		>
 			<input
@@ -33,19 +33,19 @@
 			<button
 				id="upload"
 				type="button"
-				aria-label="Upload file"
+				aria-label="Prześlij plik"
 				:disabled="!store.state.isConnected"
 			/>
 		</span>
 		<span
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Send message"
+			aria-label="Wyślij wiadomość"
 		>
 			<button
 				id="submit"
 				type="submit"
-				aria-label="Send message"
+				aria-label="Wyślij wiadomość"
 				:disabled="!store.state.isConnected"
 			/>
 		</span>

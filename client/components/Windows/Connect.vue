@@ -10,7 +10,7 @@ import {useStore} from "../../js/store";
 import NetworkForm, {NetworkFormDefaults} from "../NetworkForm.vue";
 
 export default defineComponent({
-	name: "Connect",
+	name: "Połącz",
 	components: {
 		NetworkForm,
 	},

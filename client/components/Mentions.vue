@@ -7,18 +7,18 @@
 	>
 		<div class="mentions-popup">
 			<div class="mentions-popup-title">
-				Recent mentions
+				Ostatnie wzmianki
 				<button
 					v-if="resolvedMessages.length"
 					class="btn dismiss-all-mentions"
 					@click="dismissAllMentions()"
 				>
-					Dismiss all
+					Usuń wszystkie
 				</button>
 			</div>
 			<template v-if="resolvedMessages.length === 0">
-				<p v-if="isLoading">Loading…</p>
-				<p v-else>You have no recent mentions.</p>
+				<p v-if="isLoading">Ładowanie…</p>
+				<p v-else>Nie masz żadnych ostatnich wzmianek.</p>
 			</template>
 			<template v-for="message in resolvedMessages" v-else :key="message.msgId">
 				<div :class="['msg', message.type]">
@@ -30,7 +30,7 @@
 									in {{ message.channel.channel.name }} on
 									{{ message.channel.network.name }}
 								</template>
-								<template v-else> in unknown channel </template> </span
+								<template v-else> w nieznanym kanale </template> </span
 							>{{ ` ` }}
 							<span :title="message.localetime" class="time">
 								{{ messageTime(message.time.toString()) }}
@@ -39,11 +39,11 @@
 						<div>
 							<span
 								class="close-tooltip tooltipped tooltipped-w"
-								aria-label="Dismiss this mention"
+								aria-label="Usuń tę wzmiankę"
 							>
 								<button
 									class="msg-dismiss"
-									aria-label="Dismiss this mention"
+									aria-label="Usuń tę wzmiankę"
 									@click="dismissMention(message)"
 								></button>
 							</span>

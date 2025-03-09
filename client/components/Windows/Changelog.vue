@@ -1,20 +1,20 @@
 <template>
-	<div id="changelog" class="window" aria-label="Changelog">
+	<div id="changelog" class="window" aria-label="Dziennik zmian">
 		<div class="header">
 			<SidebarToggle />
 		</div>
 		<div class="container">
-			<router-link id="back-to-help" to="/help">« Help</router-link>
+			<router-link id="back-to-help" to="/help">« Pomoc</router-link>
 
 			<template
 				v-if="store.state.versionData?.current && store.state.versionData?.current.version"
 			>
 				<h1 class="title">
-					Release notes for {{ store.state.versionData.current.version }}
+				Informacje o wydaniu dla wersji {{ store.state.versionData.current.version }}
 				</h1>
 
 				<template v-if="store.state.versionData.current.changelog">
-					<h3>Introduction</h3>
+					<h3>Wprowadzenie</h3>
 					<div
 						ref="changelog"
 						class="changelog-text"
@@ -22,19 +22,19 @@
 					></div>
 				</template>
 				<template v-else>
-					<p>Unable to retrieve changelog for current release from GitHub.</p>
+					<p>Nie można pobrać dziennika zmian dla tej wersji z GitHub.</p>
 					<p>
 						<a
 							v-if="store.state.serverConfiguration?.version"
 							:href="`https://github.com/thelounge/thelounge/releases/tag/v${store.state.serverConfiguration?.version}`"
 							target="_blank"
 							rel="noopener"
-							>View release notes for this version on GitHub</a
+							>Zobacz informacje o wydaniu tej wersji na GitHub</a
 						>
 					</p>
 				</template>
 			</template>
-			<p v-else>Loading changelog…</p>
+			<p v-else>Ładowanie dziennika zmian…</p>
 		</div>
 	</div>
 </template>

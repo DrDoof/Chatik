@@ -72,13 +72,13 @@
 		</div>
 
 		<div v-if="!store.state.serverConfiguration?.public" class="session-list" role="group">
-			<h2>Sessions</h2>
+			<h2>Sesje</h2>
 
-			<h3>Current session</h3>
+			<h3>Bieżąca sesja</h3>
 			<Session v-if="currentSession" :session="currentSession" />
 
 			<template v-if="activeSessions.length > 0">
-				<h3>Active sessions</h3>
+				<h3>Aktywne sesje</h3>
 				<Session
 					v-for="session in activeSessions"
 					:key="session.token"
@@ -86,10 +86,10 @@
 				/>
 			</template>
 
-			<h3>Other sessions</h3>
-			<p v-if="store.state.sessions.length === 0">Loading…</p>
+			<h3>Inne sesje</h3>
+			<p v-if="store.state.sessions.length === 0">Ładowanie…</p>
 			<p v-else-if="otherSessions.length === 0">
-				<em>You are not currently logged in to any other device.</em>
+				<em>Nie jesteś obecnie zalogowany na żadnym innym urządzeniu.</em>
 			</p>
 			<Session
 				v-for="session in otherSessions"

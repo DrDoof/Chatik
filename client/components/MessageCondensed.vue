@@ -90,52 +90,52 @@ export default defineComponent({
 							strings.push(
 								String(obj[type]) +
 									(obj[type] > 1
-										? " users have changed hostname"
-										: " user has changed hostname")
+										? " użytkowników zmieniło nazwę hosta"
+										: " użytkownik zmienił nazwę hosta")
 							);
 							break;
 						case "join":
 							strings.push(
 								String(obj[type]) +
-									(obj[type] > 1 ? " users have joined" : " user has joined")
+									(obj[type] > 1 ? " użytkowników dołączyło" : " użytkownik dołączył")
 							);
 							break;
 						case "part":
 							strings.push(
 								String(obj[type]) +
-									(obj[type] > 1 ? " users have left" : " user has left")
+									(obj[type] > 1 ? " użytkowników opuściło kanał" : " użytkownik opuścił kanał")
 							);
 							break;
 						case "nick":
 							strings.push(
 								String(obj[type]) +
 									(obj[type] > 1
-										? " users have changed nick"
-										: " user has changed nick")
+										? " użytkowników zmieniło nick"
+										: " użytkownik zmienił nick")
 							);
 							break;
 						case "kick":
 							strings.push(
 								String(obj[type]) +
-									(obj[type] > 1 ? " users were kicked" : " user was kicked")
+									(obj[type] > 1 ? " użytkowników zostało wyrzuconych" : " użytkownik został wyrzucony")
 							);
 							break;
 						case "mode":
 							strings.push(
 								String(obj[type]) +
-									(obj[type] > 1 ? " modes were set" : " mode was set")
+									(obj[type] > 1 ? " ustawiono tryby" : " ustawiono tryb")
 							);
 							break;
 						case "away":
 							strings.push(
-								"marked away " +
-									(obj[type] > 1 ? String(obj[type]) + " times" : "once")
+								"oznaczony jako nieobecny " +
+									(obj[type] > 1 ? String(obj[type]) + " razy" : "raz")
 							);
 							break;
 						case "back":
 							strings.push(
-								"marked back " +
-									(obj[type] > 1 ? String(obj[type]) + " times" : "once")
+								"powrócił " +
+									(obj[type] > 1 ? String(obj[type]) + " razy" : "raz")
 							);
 							break;
 					}
@@ -146,7 +146,7 @@ export default defineComponent({
 				let text = strings.pop();
 
 				if (strings.length) {
-					text = strings.join(", ") + ", and " + text!;
+					text = strings.join(", ") + ", i " + text!;
 				}
 
 				return text;

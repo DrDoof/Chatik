@@ -13,12 +13,12 @@
 				:id="'chan-' + channel.id"
 				class="chat-view"
 				:data-type="channel.type"
-				:aria-label="channel.name"
+				:aria-label="'Obecnie otwarty ' + channel.type"
 				role="tabpanel"
 			>
 				<div class="header">
 					<SidebarToggle />
-					<span class="title" :aria-label="'Currently open ' + channel.type">{{
+					<span class="title" :aria-label="'Obecnie otwarty ' + channel.type">{{
 						channel.name
 					}}</span>
 					<div v-if="channel.editTopic === true" class="topic-container">
@@ -26,13 +26,13 @@
 							ref="topicInput"
 							:value="channel.topic"
 							class="topic-input"
-							placeholder="Set channel topic"
+							placeholder="Ustaw temat kanału"
 							enterkeyhint="done"
 							@keyup.enter="saveTopic"
 							@keyup.esc="channel.editTopic = false"
 						/>
-						<span aria-label="Save topic" class="save-topic" @click="saveTopic">
-							<span type="button" aria-label="Save topic"></span>
+						<span aria-label="Zapisz temat" class="save-topic" @click="saveTopic">
+							<span type="button" aria-label="Zapisz temat"></span>
 						</span>
 					</div>
 					<span
@@ -55,22 +55,22 @@
 					/>
 					<button
 						class="mentions"
-						aria-label="Open your mentions"
+						aria-label="Otwórz swoje wzmianki"
 						@click="openMentions"
 					/>
 					<button
 						class="menu"
-						aria-label="Open the context menu"
+						aria-label="Otwórz menu kontekstowe"
 						@click="openContextMenu"
 					/>
 					<span
 						v-if="channel.type === 'channel'"
 						class="rt-tooltip tooltipped tooltipped-w"
-						aria-label="Toggle user list"
+						aria-label="Przełącz listę użytkowników"
 					>
 						<button
 							class="rt"
-							aria-label="Toggle user list"
+							aria-label="Przełącz listę użytkowników"
 							@click="store.commit('toggleUserlist')"
 						/>
 					</span>
@@ -94,7 +94,7 @@
 							'scroll-down tooltipped tooltipped-w tooltipped-no-touch',
 							{'scroll-down-shown': !channel.scrolledToBottom},
 						]"
-						aria-label="Jump to recent messages"
+						aria-label="Przejdź do najnowszych wiadomości"
 						@click="messageList?.jumpToBottom()"
 					>
 						<div class="scroll-down-arrow" />

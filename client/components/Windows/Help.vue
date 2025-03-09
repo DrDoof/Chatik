@@ -7,12 +7,12 @@
 			<h1 class="title">Help</h1>
 
 			<h2 class="help-version-title">
-				<span>About The Lounge</span>
+				<span>O Czatiku</span>
 				<small>
 					v{{ store.state.serverConfiguration?.version }} (<router-link
 						id="view-changelog"
 						to="/changelog"
-						>release notes</router-link
+						>informacje o wydaniu</router-link
 					>)
 				</small>
 			</h2>
@@ -60,7 +60,7 @@
 
 				<p>
 					<a
-						href="https://thelounge.chat/"
+						href="https://chatik.pl/"
 						target="_blank"
 						rel="noopener"
 						class="website-link"
@@ -69,11 +69,11 @@
 				</p>
 				<p>
 					<a
-						href="https://thelounge.chat/docs/"
+						href="https://chatik.pl/docs/"
 						target="_blank"
 						rel="noopener"
 						class="documentation-link"
-						>Documentation</a
+						>Dokumentacja</a
 					>
 				</p>
 				<p>
@@ -82,42 +82,42 @@
 						target="_blank"
 						rel="noopener"
 						class="report-issue-link"
-						>Report an issue…</a
+						>Zgłoś problem…</a
 					>
 				</p>
 			</div>
 
-			<h2 v-if="isTouch">Gestures</h2>
+			<h2 v-if="isTouch">Gesty</h2>
 
 			<div v-if="isTouch" class="help-item">
-				<div class="subject gesture">Single-Finger Swipe Left</div>
+				<div class="subject gesture">Przesunięcie jednym palcem w lewo</div>
 				<div class="description">
-					<p>Hide sidebar.</p>
+					<p>Ukryj pasek boczny.</p>
 				</div>
 			</div>
 
 			<div v-if="isTouch" class="help-item">
-				<div class="subject gesture">Single-Finger Swipe Right</div>
+				<div class="subject gesture">Przesunięcie jednym palcem w prawo</div>
 				<div class="description">
-					<p>Show sidebar.</p>
+					<p>Pokaż pasek boczny.</p>
 				</div>
 			</div>
 
 			<div v-if="isTouch" class="help-item">
-				<div class="subject gesture">Two-Finger Swipe Left</div>
+				<div class="subject gesture">Przesunięcie dwoma palcami w lewo</div>
 				<div class="description">
-					<p>Switch to the next window in the channel list.</p>
+					<p>Przełącz na następne okno na liście kanałów.</p>
 				</div>
 			</div>
 
 			<div v-if="isTouch" class="help-item">
-				<div class="subject gesture">Two-Finger Swipe Right</div>
+				<div class="subject gesture">Przesunięcie dwoma palcami w prawo</div>
 				<div class="description">
-					<p>Switch to the previous window in the channel list.</p>
+					<p> Przełącz na poprzednie okno na liście kanałów.</p>
 				</div>
 			</div>
 
-			<h2>Keyboard Shortcuts</h2>
+			<h2>Skróty klawiaturowe</h2>
 
 			<div class="help-item">
 				<div class="subject">
@@ -125,7 +125,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the next lobby in the channel list.</p>
+					<p> Przełącz na następne lobby na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -135,7 +135,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↑</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the previous lobby in the channel list.</p>
+					<p>Przełącz na poprzednie lobby na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -145,7 +145,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>←</kbd></span>
 				</div>
 				<div class="description">
-					<p>Collapse current network.</p>
+					<p>Zwiń bieżącą sieć.</p>
 				</div>
 			</div>
 
@@ -155,7 +155,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>→</kbd></span>
 				</div>
 				<div class="description">
-					<p>Expand current network.</p>
+					<p>Rozwiń bieżącą sieć..</p>
 				</div>
 			</div>
 
@@ -185,7 +185,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the next window with unread messages in the channel list.</p>
+					<p>Przełącz na następne okno z nieprzeczytanymi wiadomościami na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -195,7 +195,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>↑</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the previous window with unread messages in the channel list.</p>
+					<p>Przełącz na poprzednie okno z nieprzeczytanymi wiadomościami na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -205,7 +205,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>A</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the first window with unread messages.</p>
+					<p>Przełącz na pierwsze okno z nieprzeczytanymi wiadomościami.</p>
 				</div>
 			</div>
 
@@ -215,7 +215,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>S</kbd></span>
 				</div>
 				<div class="description">
-					<p>Toggle sidebar.</p>
+					<p>Przełącz pasek boczny..</p>
 				</div>
 			</div>
 
@@ -235,7 +235,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>J</kbd></span>
 				</div>
 				<div class="description">
-					<p>Toggle jump to channel switcher.</p>
+					<p>Przełącz listę użytkowników kanału.</p>
 				</div>
 			</div>
 
@@ -245,7 +245,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>M</kbd></span>
 				</div>
 				<div class="description">
-					<p>Toggle recent mentions popup.</p>
+					<p>Przełącz wyskakujące okno z ostatnimi wzmiankami.</p>
 				</div>
 			</div>
 
@@ -255,7 +255,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>/</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the help menu.</p>
+					<p>Przełącz do menu pomocy.</p>
 				</div>
 			</div>
 
@@ -265,13 +265,13 @@
 				</div>
 				<div class="description">
 					<p>
-						Close current contextual window (context menu, image viewer, topic edit,
-						etc) and remove focus from input.
+						Zamknij bieżące okno kontekstowe (menu kontekstowe, przeglądarka obrazów, 
+						edycja tematu itp.) i usuń fokus z pola wprowadzania.
 					</p>
 				</div>
 			</div>
 
-			<h2>Formatting Shortcuts</h2>
+			<h2>Skróty formatowania</h2>
 
 			<div class="help-item">
 				<div class="subject">
@@ -279,25 +279,25 @@
 					<span v-else><kbd>⌘</kbd> <kbd>K</kbd></span>
 				</div>
 				<div class="description">
-					<p>
-						Mark any text typed after this shortcut to be colored. After hitting this
-						shortcut, enter an integer in the range
-						<code>0—15</code> to select the desired color, or use the autocompletion
-						menu to choose a color name (see below).
+										<p>
+						Oznacz dowolny tekst wpisany po tym skrócie jako kolorowy. Po użyciu tego 
+						skrótu wpisz liczbę całkowitą z zakresu <code>0—15</code>, aby wybrać 
+						żądany kolor, lub skorzystaj z menu autouzupełniania, aby wybrać nazwę koloru 
+						(zobacz poniżej).
 					</p>
 					<p>
-						Background color can be specified by putting a comma and another integer in
-						the range <code>0—15</code> after the foreground color number
-						(autocompletion works too).
+						Kolor tła można określić, dodając po przecinku kolejną liczbę całkowitą 
+						z zakresu <code>0—15</code> po numerze koloru pierwszego planu 
+						(autouzupełnianie również działa).
 					</p>
 					<p>
-						A color reference can be found
+						Referencję kolorów można znaleźć
 						<a
 							href="https://modern.ircdocs.horse/formatting.html#colors"
 							target="_blank"
 							rel="noopener"
-							>here</a
-						>.
+							>tutaj</a>
+						.
 					</p>
 				</div>
 			</div>
@@ -309,8 +309,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
-						<span class="irc-bold">bold</span>.
+						Oznacz cały tekst wpisany po tym skrócie jako
+						<span class="irc-bold">pogrubiony</span>.
 					</p>
 				</div>
 			</div>
@@ -322,8 +322,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
-						<span class="irc-underline">underlined</span>.
+						Oznacz cały tekst wpisany po tym skrócie jako
+						<span class="irc-underline">podkreślony</span>.
 					</p>
 				</div>
 			</div>
@@ -335,8 +335,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
-						<span class="irc-italic">italics</span>.
+						Oznacz cały tekst wpisany po tym skrócie jako
+						<span class="irc-italic">kursywę</span>.
 					</p>
 				</div>
 			</div>
@@ -348,8 +348,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
-						<span class="irc-strikethrough">struck through</span>.
+						Oznacz cały tekst wpisany po tym skrócie jako
+						<span class="irc-strikethrough">przekreślony</span>.
 					</p>
 				</div>
 			</div>
@@ -361,8 +361,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
-						<span class="irc-monospace">monospaced</span>.
+						Oznacz cały tekst wpisany po tym skrócie jako
+						<span class="irc-monospace">jednolity</span>.
 					</p>
 				</div>
 			</div>
@@ -374,28 +374,28 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut to be reset to its original
-						formatting.
+						Zresetuj formatowanie całego tekstu wpisanego po tym skrócie do domyślnego.
 					</p>
 				</div>
 			</div>
 
 			<h2>Autocompletion</h2>
 
-			<p>
-				To auto-complete nicknames, channels, commands, and emoji, type one of the
-				characters below to open a suggestion list. Use the <kbd>↑</kbd> and
-				<kbd>↓</kbd> keys to highlight an item, and insert it by pressing <kbd>Tab</kbd> or
-				<kbd>Enter</kbd> (or by clicking the desired item).
-			</p>
-			<p>Autocompletion can be disabled in settings.</p>
+				<p>
+					Aby automatycznie uzupełniać pseudonimy, kanały, komendy i emoji, wpisz jeden z
+					poniższych znaków, aby otworzyć listę sugestii. Użyj klawiszy <kbd>↑</kbd> i
+					<kbd>↓</kbd>, aby podświetlić element, a następnie wstaw go, naciskając <kbd>Tab</kbd> lub
+					<kbd>Enter</kbd> (lub klikając wybrany element).
+				</p>
+				<p>Autouzupełnianie można wyłączyć w ustawieniach.</p>
+			
 
 			<div class="help-item">
 				<div class="subject">
 					<code>@</code>
 				</div>
 				<div class="description">
-					<p>Nickname</p>
+					<p>Pseudonim</p>
 				</div>
 			</div>
 
@@ -404,7 +404,7 @@
 					<code>#</code>
 				</div>
 				<div class="description">
-					<p>Channel</p>
+					<p>Kanał</p>
 				</div>
 			</div>
 
@@ -413,7 +413,7 @@
 					<code>/</code>
 				</div>
 				<div class="description">
-					<p>Commands (see list of commands below)</p>
+					<p>Komendy (zobacz listę komend poniżej)</p>
 				</div>
 			</div>
 
@@ -423,20 +423,20 @@
 				</div>
 				<div class="description">
 					<p>
-						Emoji (note: requires two search characters, to avoid conflicting with
-						common emoticons like <code>:)</code>)
+						Emoji (uwaga: wymaga wpisania co najmniej dwóch znaków, aby uniknąć konfliktu
+						z popularnymi emotikonami, takimi jak <code>:)</code>)
 					</p>
 				</div>
 			</div>
 
-			<h2>Commands</h2>
+			<h2>Komendy</h2>
 
 			<div class="help-item">
 				<div class="subject">
-					<code>/away [message]</code>
+					<code>/away [wiadomość]</code>
 				</div>
 				<div class="description">
-					<p>Mark yourself as away with an optional message.</p>
+					<p>Ustaw status "Zaraz wracam" z opcjonalną wiadomością.</p>
 				</div>
 			</div>
 
@@ -445,7 +445,7 @@
 					<code>/back</code>
 				</div>
 				<div class="description">
-					<p>Remove your away status (set with <code>/away</code>).</p>
+					<p>Usuń status "Zaraz wracam" (ustawiony za pomocą <code>/away</code>).</p>
 				</div>
 			</div>
 
@@ -454,10 +454,8 @@
 					<code>/ban nick</code>
 				</div>
 				<div class="description">
-					<p>
-						Ban (<code>+b</code>) a user from the current channel. This can be a
-						nickname or a hostmask.
-					</p>
+					<p>Zbanuj użytkownika na bieżącym kanale (<code>+b</code>). Może to być 
+						pseudonim lub maska hosta.</p>
 				</div>
 			</div>
 
@@ -466,7 +464,7 @@
 					<code>/banlist</code>
 				</div>
 				<div class="description">
-					<p>Load the banlist for the current channel.</p>
+					<p>Załaduj listę zbanowanych użytkowników dla bieżącego kanału.</p>
 				</div>
 			</div>
 
@@ -476,8 +474,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Collapse all previews in the current channel (opposite of
-						<code>/expand</code>)
+						Zwiń wszystkie podglądy w bieżącym kanale (odwrotność polecenia
+						<code>/expand</code>).
 					</p>
 				</div>
 			</div>
@@ -488,8 +486,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Connect to a new IRC network. If <code>port</code> starts with a
-						<code>+</code> sign, the connection will be made secure using TLS.
+						Połącz się z nową siecią IRC. Jeśli <code>port</code> zaczyna się od
+						znaku <code>+</code>, połączenie będzie zabezpieczone przy użyciu TLS.
 					</p>
 					<p>Alias: <code>/server</code></p>
 				</div>
@@ -501,13 +499,13 @@
 				</div>
 				<div class="description">
 					<p>
-						Send a <abbr title="Client-to-client protocol">CTCP</abbr>
-						request. Read more about this on
+						Wyślij żądanie <abbr title="Client-to-client protocol">CTCP</abbr>.
+						Więcej na ten temat można przeczytać w
 						<a
 							href="https://en.wikipedia.org/wiki/Client-to-client_protocol"
 							target="_blank"
 							rel="noopener"
-							>the dedicated Wikipedia article</a
+							>dedykowanym artykule na Wikipedii</a
 						>.
 					</p>
 				</div>
@@ -519,8 +517,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Remove op (<code>-o</code>) from one or several users in the current
-						channel.
+						Usuń uprawnienia operatora (<code>-o</code>) jednemu lub kilku użytkownikom
+						na bieżącym kanale.
 					</p>
 				</div>
 			</div>
@@ -531,8 +529,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Remove voice (<code>-v</code>) from one or several users in the current
-						channel.
+						Usuń uprawnienia do mówienia (<code>-v</code>) jednemu lub kilku użytkownikom
+						na bieżącym kanale.
 					</p>
 				</div>
 			</div>
@@ -542,7 +540,7 @@
 					<code>/disconnect [message]</code>
 				</div>
 				<div class="description">
-					<p>Disconnect from the current network with an optionally-provided message.</p>
+					<p>Rozłącz się z bieżącą siecią z opcjonalną wiadomością.</p>
 				</div>
 			</div>
 
@@ -552,8 +550,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Expand all previews in the current channel (opposite of
-						<code>/collapse</code>)
+						Rozwiń wszystkie podglądy w bieżącym kanale (odwrotność polecenia
+						<code>/collapse</code>).
 					</p>
 				</div>
 			</div>
@@ -564,9 +562,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Invite a user to the specified channel. If
-						<code>channel</code> is omitted, user will be invited to the current
-						channel.
+						Zaproś użytkownika na określony kanał. Jeśli
+						<code>channel</code> zostanie pominięty, użytkownik zostanie zaproszony na bieżący
+						kanał.
 					</p>
 				</div>
 			</div>
@@ -577,8 +575,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Block any messages from the specified user on the current network. This can
-						be a nickname or a hostmask.
+						Zablokuj wszystkie wiadomości od określonego użytkownika w bieżącej sieci. Może to
+						być pseudonim lub maska hosta.
 					</p>
 				</div>
 			</div>
@@ -588,7 +586,7 @@
 					<code>/ignorelist</code>
 				</div>
 				<div class="description">
-					<p>Load the list of ignored users for the current network.</p>
+					<p>Załaduj listę ignorowanych użytkowników dla bieżącej sieci.</p>
 				</div>
 			</div>
 
@@ -598,8 +596,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Join a channel. Password is only needed in protected channels and can
-						usually be omitted.
+						Dołącz do kanału. Hasło jest wymagane tylko w chronionych kanałach i zazwyczaj
+						może zostać pominięte.
 					</p>
 				</div>
 			</div>
@@ -609,7 +607,7 @@
 					<code>/kick nick [reason]</code>
 				</div>
 				<div class="description">
-					<p>Kick a user from the current channel.</p>
+					<p>Wyrzuć użytkownika z bieżącego kanału.</p>
 				</div>
 			</div>
 
@@ -619,8 +617,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Kick and ban (<code>+b</code>) a user from the current channel. Unlike
-						<code>/ban</code>, only nicknames (and not host masks) can be used.
+						Wyrzuć i zbanuj (<code>+b</code>) użytkownika z bieżącego kanału. W przeciwieństwie
+						do <code>/ban</code>, można używać tylko pseudonimów (a nie masek hostów).
 					</p>
 				</div>
 			</div>
@@ -630,7 +628,7 @@
 					<code>/list</code>
 				</div>
 				<div class="description">
-					<p>Retrieve a list of available channels on this network.</p>
+					<p>Pobierz listę dostępnych kanałów w tej sieci.</p>
 				</div>
 			</div>
 
@@ -640,8 +638,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Send an action message to the current channel. The Lounge will display it
-						inline, as if the message was posted in the third person.
+						Wyślij wiadomość akcji na bieżący kanał. Chatik wyświetli ją w tekście,
+						jakby była napisana w trzeciej osobie.
 					</p>
 				</div>
 			</div>
@@ -652,9 +650,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Set the given flags to the current channel if the active window is a
-						channel, another user if the active window is a private message window, or
-						yourself if the current window is a server window.
+						Ustaw określone flagi dla bieżącego kanału, jeśli aktywne okno to kanał;
+						dla innego użytkownika, jeśli aktywne okno to okno prywatnej wiadomości;
+						lub dla siebie, jeśli aktywne okno to okno serwera.
 					</p>
 				</div>
 			</div>
@@ -664,7 +662,7 @@
 					<code>/msg channel message</code>
 				</div>
 				<div class="description">
-					<p>Send a message to the specified channel.</p>
+					<p>Wyślij wiadomość na określony kanał.</p>
 				</div>
 			</div>
 
@@ -674,10 +672,10 @@
 				</div>
 				<div class="description">
 					<p>
-						Prevent messages from generating any feedback for a channel. This turns off
-						the highlight indicator, hides mentions and inhibits push notifications.
-						Muting a network lobby mutes the entire network. Not specifying any channel
-						target mutes the current channel. Revert with <code>/unmute</code>.
+						Zablokuj powiadomienia dla kanału. Wyłącza to wskaźnik podświetlenia,
+						ukrywa wzmianki i blokuje powiadomienia push. Wyciszenie lobby sieciowego
+						wycisza całą sieć. Jeśli nie podano kanału, zostanie wyciszony bieżący
+						kanał. Cofnij zmiany poleceniem <code>/unmute</code>.
 					</p>
 				</div>
 			</div>
@@ -687,7 +685,7 @@
 					<code>/nick newnick</code>
 				</div>
 				<div class="description">
-					<p>Change your nickname on the current network.</p>
+					<p>Zmień swój pseudonim w bieżącej sieci.</p>
 				</div>
 			</div>
 
@@ -696,7 +694,7 @@
 					<code>/notice channel message</code>
 				</div>
 				<div class="description">
-					<p>Sends a notice message to the specified channel.</p>
+					<p>Wyślij wiadomość powiadomienia na określony kanał.</p>
 				</div>
 			</div>
 
@@ -705,7 +703,7 @@
 					<code>/op nick [...nick]</code>
 				</div>
 				<div class="description">
-					<p>Give op (<code>+o</code>) to one or several users in the current channel.</p>
+					<p>Przyznaj uprawnienia operatora (<code>+o</code>) jednemu lub kilku użytkownikom na bieżącym kanale.</p>
 				</div>
 			</div>
 
@@ -715,10 +713,10 @@
 				</div>
 				<div class="description">
 					<p>
-						Close the specified channel or private message window, or the current
-						channel if <code>channel</code> is omitted.
+						Zamknij określony kanał lub okno prywatnej wiadomości, lub bieżący
+						kanał, jeśli <code>channel</code> nie został podany.
 					</p>
-					<p>Aliases: <code>/close</code>, <code>/leave</code></p>
+					<p>Aliasy: <code>/close</code>, <code>/leave</code></p>
 				</div>
 			</div>
 
@@ -728,8 +726,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Leave and immediately rejoin the current channel. Useful to quickly get op
-						from ChanServ in an empty channel, for example.
+						Opuszcza i natychmiast ponownie dołącza do bieżącego kanału. Przydatne do szybkiego uzyskania 
+						uprawnień operatora od ChanServ na pustym kanale.
 					</p>
 					<p>Alias: <code>/cycle</code></p>
 				</div>
@@ -740,7 +738,7 @@
 					<code>/query nick</code>
 				</div>
 				<div class="description">
-					<p>Send a private message to the specified user.</p>
+					<p>Wyślij prywatną wiadomość do określonego użytkownika.</p>
 				</div>
 			</div>
 
@@ -749,7 +747,7 @@
 					<code>/quit [message]</code>
 				</div>
 				<div class="description">
-					<p>Disconnect from the current network with an optional message.</p>
+					<p>Rozłącz się z bieżącą siecią, opcjonalnie podając wiadomość.</p>
 				</div>
 			</div>
 
@@ -758,8 +756,8 @@
 					<code>/raw message</code>
 				</div>
 				<div class="description">
-					<p>Send a raw message to the current IRC network.</p>
-					<p>Aliases: <code>/quote</code>, <code>/send</code></p>
+					<p>Wyślij surową wiadomość do bieżącej sieci IRC.</p>
+					<p>Aliasy: <code>/quote</code>, <code>/send</code></p>
 				</div>
 			</div>
 
@@ -768,7 +766,7 @@
 					<code>/slap nick</code>
 				</div>
 				<div class="description">
-					<p>Slap someone in the current channel with a trout!</p>
+					<p>Uderz kogoś pstrągiem na bieżącym kanale!</p>
 				</div>
 			</div>
 
@@ -777,7 +775,7 @@
 					<code>/search query</code>
 				</div>
 				<div class="description">
-					<p>Search for messages in the current channel / user</p>
+					<p>Wyszukaj wiadomości w bieżącym kanale / u użytkownika</p>
 				</div>
 			</div>
 
@@ -787,8 +785,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Get the topic in the current channel. If <code>newtopic</code> is specified,
-						sets the topic in the current channel.
+						Pobierz temat bieżącego kanału. Jeśli podano <code>newtopic</code>,
+						ustawi nowy temat na bieżącym kanale.
 					</p>
 				</div>
 			</div>
@@ -799,8 +797,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Unban (<code>-b</code>) a user from the current channel. This can be a
-						nickname or a hostmask.
+						Usuń bana (<code>-b</code>) użytkownika na bieżącym kanale. Może to być
+						pseudonim lub maska hosta.
 					</p>
 				</div>
 			</div>
@@ -811,8 +809,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Unblock messages from the specified user on the current network. This can be
-						a nickname or a hostmask.
+						Odblokuj wiadomości od określonego użytkownika w bieżącej sieci. Może to być
+						pseudonim lub maska hosta.
 					</p>
 				</div>
 			</div>
@@ -823,8 +821,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Un-mutes the given channel(s) or the current channel if no channel is
-						provided. See <code>/mute</code> for more information.
+						Anuluj wyciszenie określonych kanałów lub bieżącego kanału, jeśli nie podano kanału.
+						Zobacz <code>/mute</code>, aby uzyskać więcej informacji.
 					</p>
 				</div>
 			</div>
@@ -835,7 +833,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Give voice (<code>+v</code>) to one or several users in the current channel.
+						Przyznaj prawo głosu (<code>+v</code>) jednemu lub kilku użytkownikom na bieżącym kanale.
 					</p>
 				</div>
 			</div>
@@ -845,7 +843,7 @@
 					<code>/whois nick</code>
 				</div>
 				<div class="description">
-					<p>Retrieve information about the given user on the current network.</p>
+					<p>Pobierz informacje o podanym użytkowniku w bieżącej sieci.</p>
 				</div>
 			</div>
 		</div>

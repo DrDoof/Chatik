@@ -8,16 +8,16 @@
 			}}</a>
 
 			<p v-if="session.active > 1" class="session-usage">
-				Active in {{ session.active }} browsers
+				Aktywna w {{ session.active }} przeglądarkach
 			</p>
 			<p v-else-if="!session.current && !session.active" class="session-usage">
-				Last used on <time>{{ lastUse }}</time>
+				Ostatnio używana <time>{{ lastUse }}</time>
 			</p>
 		</div>
 		<div class="session-item-btn">
 			<button class="btn" @click.prevent="signOut">
-				<template v-if="session.current">Sign out</template>
-				<template v-else>Revoke</template>
+				<template v-if="session.current">Wyloguj</template>
+				<template v-else>Unieważnij</template>
 			</button>
 		</div>
 	</div>

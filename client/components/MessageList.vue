@@ -7,8 +7,8 @@
 				class="btn"
 				@click="onShowMoreClick"
 			>
-				<span v-if="channel.historyLoading">Loading…</span>
-				<span v-else>Show older messages</span>
+				<span v-if="channel.historyLoading">Ładowanie…</span>
+				<span v-else>Pokaż starsze wiadomości</span>
 			</button>
 		</div>
 		<div

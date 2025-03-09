@@ -2,9 +2,9 @@
 	<table class="invite-list">
 		<thead>
 			<tr>
-				<th class="hostmask">Invited</th>
-				<th class="invitened_by">Invited By</th>
-				<th class="invitened_at">Invited At</th>
+				<th class="hostmask">Zaproszony</th>
+				<th class="invitened_by">Zaproszony przez</th>
+				<th class="invitened_at">Data zaproszenia</th>
 			</tr>
 		</thead>
 		<tbody>

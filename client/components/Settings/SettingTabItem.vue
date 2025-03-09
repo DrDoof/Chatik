@@ -1,5 +1,5 @@
 <template>
-	<li :aria-label="name" role="tab" :aria-selected="route.name === name" aria-controls="settings">
+	<li aria-label="nazwa" role="tab" :aria-selected="route.name === name" aria-controls="ustawienia">
 		<router-link v-slot:default="{navigate, isExactActive}" :to="'/settings/' + to" custom>
 			<button
 				:class="['icon', className, {active: isExactActive}]"

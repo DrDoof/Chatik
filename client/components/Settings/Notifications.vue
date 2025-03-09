@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<template v-if="!store.state.serverConfiguration?.public">
-			<h2>Push Notifications</h2>
+			<h2>Powiadomienia push</h2>
 			<div>
 				<button
 					id="pushNotifications"
@@ -14,25 +14,24 @@
 					@click="onPushButtonClick"
 				>
 					<template v-if="store.state.pushNotificationState === 'subscribed'">
-						Unsubscribe from push notifications
+						Anuluj subskrypcję powiadomień push
 					</template>
 					<template v-else-if="store.state.pushNotificationState === 'loading'">
-						Loading…
+						Ładowanie…
 					</template>
-					<template v-else> Subscribe to push notifications </template>
+					<template v-else> Zasubskrybuj powiadomienia push </template>
 				</button>
 				<div v-if="store.state.pushNotificationState === 'nohttps'" class="error">
-					<strong>Warning</strong>: Push notifications are only supported over HTTPS
-					connections.
+					<strong>Ostrzeżenie</strong>: Powiadomienia push są obsługiwane tylko przez połączenia HTTPS.
 				</div>
 				<div v-if="store.state.pushNotificationState === 'unsupported'" class="error">
-					<strong>Warning</strong>:
-					<span>Push notifications are not supported by your browser.</span>
+					<strong>Ostrzeżenie</strong>:
+					<span>Twoja przeglądarka nie obsługuje powiadomień push.</span>
 				</div>
 			</div>
 		</template>
 
-		<h2>Browser Notifications</h2>
+		<h2>Powiadomienia przeglądarki</h2>
 		<div>
 			<label class="opt">
 				<input
@@ -42,24 +41,23 @@
 					type="checkbox"
 					name="desktopNotifications"
 				/>
-				Enable browser notifications<br />
+				Włącz powiadomienia przeglądarki<br />
 				<div v-if="store.state.desktopNotificationState === 'unsupported'" class="error">
-					<strong>Warning</strong>: Notifications are not supported by your browser.
+					<strong>Ostrzeżenie</strong>: Twoja przeglądarka nie obsługuje powiadomień.
 				</div>
 				<div
 					v-if="store.state.desktopNotificationState === 'nohttps'"
 					id="warnBlockedDesktopNotifications"
 					class="error"
 				>
-					<strong>Warning</strong>: Notifications are only supported over HTTPS
-					connections.
+					<strong>Ostrzeżenie</strong>: Powiadomienia są obsługiwane tylko przez połączenia HTTPS.
 				</div>
 				<div
 					v-if="store.state.desktopNotificationState === 'blocked'"
 					id="warnBlockedDesktopNotifications"
 					class="error"
 				>
-					<strong>Warning</strong>: Notifications are blocked by your browser.
+					<strong>Ostrzeżenie</strong>: Powiadomienia są zablokowane przez Twoją przeglądarkę.
 				</div>
 			</label>
 		</div>
@@ -70,12 +68,12 @@
 					type="checkbox"
 					name="notification"
 				/>
-				Enable notification sound
+				Włącz dźwięk powiadomień
 			</label>
 		</div>
 		<div>
 			<div class="opt">
-				<button id="play" @click.prevent="playNotification">Play sound</button>
+				<button id="play" @click.prevent="playNotification">Odtwórz dźwięk</button>
 			</div>
 		</div>
 
@@ -86,18 +84,17 @@
 					type="checkbox"
 					name="notifyAllMessages"
 				/>
-				Enable notification for all messages
+				Włącz powiadomienia dla wszystkich wiadomości
 			</label>
 		</div>
 
 		<div v-if="!store.state.serverConfiguration?.public">
 			<label class="opt">
 				<label for="highlights" class="opt">
-					Custom highlights
+					Własne wyróżnienia
 					<span
 						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="If a message contains any of these comma-separated
-expressions, it will trigger a highlight."
+						aria-label="Jeśli wiadomość zawiera którykolwiek z tych wyrażeń oddzielonych przecinkami, zostanie wyróżniona."
 					>
 						<button class="extra-help" />
 					</span>
@@ -109,7 +106,7 @@ expressions, it will trigger a highlight."
 					name="highlights"
 					class="input"
 					autocomplete="off"
-					placeholder="Comma-separated, e.g.: word, some more words, anotherword"
+					placeholder="Oddzielone przecinkami, np.: słowo, więcej słów, inne słowo"
 				/>
 			</label>
 		</div>
@@ -117,12 +114,10 @@ expressions, it will trigger a highlight."
 		<div v-if="!store.state.serverConfiguration?.public">
 			<label class="opt">
 				<label for="highlightExceptions" class="opt">
-					Highlight exceptions
+					Wyjścia wyróżnień
 					<span
 						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="If a message contains any of these comma-separated
-expressions, it will not trigger a highlight even if it contains
-your nickname or expressions defined in custom highlights."
+						aria-label="Jeśli wiadomość zawiera któreś z tych wyrażeń oddzielonych przecinkami, nie zostanie wyróżniona, nawet jeśli zawiera Twój pseudonim lub wyrażenia zdefiniowane w niestandardowych wyróżnieniach."
 					>
 						<button class="extra-help" />
 					</span>
@@ -134,7 +129,7 @@ your nickname or expressions defined in custom highlights."
 					name="highlightExceptions"
 					class="input"
 					autocomplete="off"
-					placeholder="Comma-separated, e.g.: word, some more words, anotherword"
+					placeholder="Oddzielone przecinkami, np.: słowo, więcej słów, inne słowo"
 				/>
 			</label>
 		</div>
