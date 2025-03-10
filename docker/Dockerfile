@@ -33,10 +33,10 @@ RUN apk --update --no-cache --virtual build-deps add python3 build-base git && \
 WORKDIR ${THELOUNGE_HOME}
 
 RUN git clone --depth=1 https://github.com/DrDoof/Chatik.git . && \
+    yarn install --frozen-lockfile && \
     yarn add npm-run-all webpack webpack-cli typescript --dev && \
     yarn add ts-node @babel/register @babel/core esbuild-register sucrase @swc/register --dev && \
     yarn add webpack webpack-cli copy-webpack-plugin fork-ts-checker-webpack-plugin mini-css-extract-plugin vue-loader --dev && \
-    yarn install --frozen-lockfile && \
     yarn build && \
     yarn cache clean
 #    yarn --non-interactive --frozen-lockfile global add thelounge@${THELOUNGE_VERSION} && \
