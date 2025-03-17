@@ -12,8 +12,8 @@ yarn-error.log
 .env.production
 
 # Ignorowanie plików kompilacji
-dist
-build
+#dist
+#build
 out
 coverage
 

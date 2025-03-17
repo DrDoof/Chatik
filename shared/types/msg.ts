@@ -27,6 +27,12 @@ export enum MessageType {
 	RAW = "raw",
 	PLUGIN = "plugin",
 	WALLOPS = "wallops",
+	CHANSERV = "chanserv",
+	NICKSERV = "nickserv",
+	MEMOSERV = "memoserv",
+	OPERSERV = "operserv",
+	BOTSERV = "botserv",
+	HOSTSERV = "hostserv",
 }
 
 export type SharedUser = {
@@ -97,4 +103,5 @@ export type SharedMsg = {
 
 	statusmsgGroup?: string;
 	params?: string[];
+	service?: boolean;
 };
