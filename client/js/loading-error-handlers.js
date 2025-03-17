@@ -11,7 +11,7 @@
 	const msg = document.getElementById("loading-page-message");
 
 	if (msg) {
-		msg.textContent = "Loading the app…";
+		msg.textContent = "Ładowanie aplikacji…";
 	}
 
 	document.getElementById("loading-reload")?.addEventListener("click", () => location.reload());
@@ -42,16 +42,16 @@
 			return;
 		}
 
-		msg.textContent = "An error has occurred that prevented the client from loading correctly.";
+		msg.textContent = "Wystąpił błąd, który uniemożliwił poprawne załadowanie klienta.";
 
 		const summary = document.createElement("summary");
-		summary.textContent = "More details";
+		summary.textContent = "Więcej szczegółów";
 
 		const data = document.createElement("pre");
 		data.textContent = e.message; // e is an ErrorEvent
 
 		const info = document.createElement("p");
-		info.textContent = "Open the developer tools of your browser for more information.";
+		info.textContent = "Otwórz narzędzia deweloperskie przeglądarki, aby uzyskać więcej informacji.";
 
 		const details = document.createElement("details");
 		details.appendChild(summary);
@@ -115,7 +115,7 @@
 			if (event.data.type === "fetch-error") {
 				// @ts-expect-error Argument of type '{ message: string; }' is not assignable to parameter of type 'ErrorEvent'.
 				errorHandler({
-					message: `Service worker failed to fetch an url: ${event.data.message}`,
+					message: `Service worker nie mógł pobrać URL-a: ${event.data.message}`,
 				});
 
 				// Display only one fetch error

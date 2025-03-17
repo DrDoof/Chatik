@@ -8,6 +8,7 @@ export default <IrcEventHandler>function (irc, network) {
 	const MAX_CHANS = 500;
 
 	irc.on("channel list start", function () {
+		network.allChannels = [];
 		network.chanCache = [];
 
 		updateListStatus({
@@ -24,11 +25,14 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	irc.on("channel list end", function () {
+		network.allChannels = [...network.chanCache];
 		updateListStatus(
 			network.chanCache.sort((a, b) => b.num_users! - a.num_users!).slice(0, MAX_CHANS)
 		);
 
 		network.chanCache = [];
+
+		console.log("✅ allChannels zaktualizowane:", network.allChannels);
 	});
 
 	function updateListStatus(
@@ -38,29 +42,32 @@ export default <IrcEventHandler>function (irc, network) {
 			  }
 			| Chan[]
 	) {
-		let chan = network.getChannel("Channel List");
+		client.emit("msg:chanlist", {
+			data: msg,
+		});
+		//let chan = network.getChannel("Channel List");
 
-		if (typeof chan === "undefined") {
-			chan = client.createChannel({
-				type: ChanType.SPECIAL,
-				special: SpecialChanType.CHANNELLIST,
-				name: "Channel List",
-				data: msg,
-			});
+		//if (typeof chan === "undefined") {
+		//chan = client.createChannel({
+		//	type: ChanType.SPECIAL,
+		//	special: SpecialChanType.CHANNELLIST,
+		//	name: "Channel List",
+		//	data: msg,
+		//});
 
-			client.emit("join", {
-				network: network.uuid,
-				chan: chan.getFilteredClone(true),
-				shouldOpen: false,
-				index: network.addChannel(chan),
-			});
-		} else {
-			chan.data = msg;
+		//client.emit("join", {
+		//	network: network.uuid,
+		//	chan: chan.getFilteredClone(true),
+		//	shouldOpen: false,
+		//	index: network.addChannel(chan),
+		//});
+		//} else {
+		//	chan.data = msg;
 
-			client.emit("msg:special", {
-				chan: chan.id,
-				data: msg,
-			});
-		}
+		//	client.emit("msg:special", {
+		//		chan: chan.id,
+		//		data: msg,
+		//	});
+		//}
 	}
 };

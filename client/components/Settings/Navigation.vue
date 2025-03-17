@@ -1,12 +1,12 @@
 <template>
-	<!-- 220px is the width of the sidebar, and we add 100px to allow for the text -->
+	<!-- 220px to szerokość panelu bocznego, dodajemy 100px na tekst -->
 	<aside class="settings-menu">
 		<h2>Ustawienia</h2>
-		<ul role="navigation" aria-label="Settings tabs">
-			<SettingTabItem name="General" class-name="general" to="" />
-			<SettingTabItem name="Appearance" class-name="appearance" to="appearance" />
-			<SettingTabItem name="Notifications" class-name="notifications" to="notifications" />
-			<SettingTabItem name="Account" class-name="account" to="account" />
+		<ul role="navigation" aria-label="Karty ustawień">
+			<SettingTabItem name="Ogólne" class-name="general" to="" />
+			<SettingTabItem name="Wygląd" class-name="appearance" to="appearance" />
+			<SettingTabItem name="Powiadomienia" class-name="notifications" to="notifications" />
+			<SettingTabItem name="Konto" class-name="account" to="account" />
 		</ul>
 	</aside>
 </template>

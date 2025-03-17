@@ -32,7 +32,17 @@ interface ServerToClientEvents {
 	"channel:state": EventHandler<{chan: number; state: ChanState}>;
 
 	"change-password": EventHandler<{success: boolean; error?: any}>;
-
+	"channels:list": EventHandler<{
+		network: {
+			uuid: string;
+			name: string;
+			channels: {
+				name: string;
+				topic: string;
+				userCount: number;
+			}[];
+		}[];
+	}>;
 	commands: EventHandler<string[]>;
 
 	configuration: EventHandler<SharedConfiguration | LockedSharedConfiguration>;
@@ -81,6 +91,7 @@ interface ServerToClientEvents {
 
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
 	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
+	"msg:chanlist": EventHandler<{data?: Record<string, any>}>;
 	msg: EventHandler<{msg: SharedMsg; chan: number; highlight?: number; unread?: number}>;
 
 	init: EventHandler<{active: number; networks: SharedNetwork[]; token?: string}>;
@@ -122,6 +133,8 @@ interface ClientToServerEvents {
 		new_password: string;
 		verify_password: string;
 	}>;
+
+	"network:chanlist": NoPayloadEventHandler;
 
 	open: (channelId: number) => void;
 

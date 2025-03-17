@@ -132,7 +132,7 @@ export default defineComponent({
 
 		const getInputPlaceholder = (channel: ClientChan) => {
 			if (channel.type === ChanType.CHANNEL || channel.type === ChanType.QUERY) {
-				return `Write to ${channel.name}`;
+				return `Napisz na ${channel.name}`;
 			}
 
 			return "";

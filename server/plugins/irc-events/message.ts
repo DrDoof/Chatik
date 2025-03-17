@@ -191,14 +191,12 @@ export default <IrcEventHandler>function (irc, network) {
 
 			// If a channel is active on any client, highlight won't increment and notification will say (0 mention)
 			if (chan.highlight > 0) {
-				title += ` (${chan.highlight} ${
-					chan.type === ChanType.QUERY ? "new message" : "mention"
-				}${chan.highlight > 1 ? "s" : ""})`;
+				title += ` (${chan.highlight} ${chan.type === ChanType.QUERY ? "nowa wiadomość" : "wzmianka"}${chan.highlight > 1 ? "i" : ""})`;
 			}
 
 			if (chan.highlight > 1) {
-				body += `\n\n… and ${chan.highlight - 1} other message${
-					chan.highlight > 2 ? "s" : ""
+				body += `\n\n… i ${chan.highlight - 1} inną wiadomość${
+					chan.highlight > 2 ? "i" : ""
 				}`;
 			}
 

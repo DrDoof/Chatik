@@ -251,7 +251,7 @@
 					autocomplete="off"
 					class="input"
 					name="leaveMessage"
-					placeholder="The Lounge - https://thelounge.chat"
+					placeholder="Chatik Web Client - https://chatik.pl"
 				/>
 			</div>
 			<template v-if="defaults.uuid && !store.state.serverConfiguration?.public">
@@ -390,7 +390,8 @@
 				<div v-else-if="defaults.sasl === 'external'" class="connect-sasl-external">
 					<p>The Lounge automatycznie generuje i zarządza certyfikatem klienta.</p>
 					<p>
-						Na serwerze IRC musisz poinformować usługi, aby dołączyły odcisk certyfikatu (certfp) do twojego konta, na przykład:
+						Na serwerze IRC musisz poinformować usługi, aby dołączyły odcisk certyfikatu
+						(certfp) do twojego konta, na przykład:
 					</p>
 					<pre><code>/msg NickServ CERT ADD</code></pre>
 				</div>

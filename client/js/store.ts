@@ -9,6 +9,7 @@ import type {InjectionKey} from "vue";
 import {SettingsState} from "./settings";
 import {SearchQuery} from "../../shared/types/storage";
 import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
+import socket from "./socket"; // Popraw ścieżkę, jeśli to konieczne
 
 const appName = document.title;
 
@@ -43,6 +44,7 @@ export type ClientSession = {
 export type State = {
 	appLoaded: boolean;
 	activeChannel?: NetChan;
+	channels: ClientChan[];
 	currentUserVisibleError: string | null;
 	desktopNotificationState: DesktopNotificationState;
 	isAutoCompleting: boolean;
@@ -87,6 +89,7 @@ const state = (): State => ({
 	appLoaded: false,
 	activeChannel: undefined,
 	currentUserVisibleError: null,
+	channels: [],
 	desktopNotificationState: detectDesktopNotificationState(),
 	isAutoCompleting: false,
 	isConnected: false,
@@ -109,6 +112,7 @@ const state = (): State => ({
 });
 
 type Getters = {
+	allChannels: (state: State) => ClientChan[];
 	findChannelOnCurrentNetwork: (state: State) => (name: string) => ClientChan | undefined;
 	findChannelOnNetwork: (state: State) => (
 		networkUuid: string,
@@ -132,6 +136,7 @@ export type CallableGetters = {
 };
 
 const getters: Getters = {
+	allChannels: (state) => state.channels,
 	findChannelOnCurrentNetwork: (state) => (name: string) => {
 		name = name.toLowerCase();
 		return state.activeChannel?.network.channels.find((c) => c.name.toLowerCase() === name);
@@ -198,6 +203,7 @@ const getters: Getters = {
 
 type Mutations = {
 	appLoaded(state: State): void;
+	setChannels(state: State, channels: ClientChan[]): void;
 	activeChannel(state: State, netChan: State["activeChannel"]): void;
 	currentUserVisibleError(state: State, error: State["currentUserVisibleError"]): void;
 	refreshDesktopNotificationState(state: State): void;
@@ -235,6 +241,9 @@ type Mutations = {
 const mutations: Mutations = {
 	appLoaded(state) {
 		state.appLoaded = true;
+	},
+	setChannels(state, channels) {
+		state.channels = channels;
 	},
 	activeChannel(state, netChan) {
 		state.activeChannel = netChan;
@@ -340,12 +349,28 @@ type TypedActionContext = Omit<ActionContext<State, State>, "commit"> & {
 
 type Actions = {
 	partChannel(context: TypedActionContext, payload: NetChan): void;
+	fetchChannels(context: TypedActionContext): void;
 };
 
 const actions: Actions = {
 	partChannel({commit, state}, netChan) {
 		const mentions = state.mentions.filter((msg) => !(msg.chanId === netChan.channel.id));
 		commit("mentions", mentions);
+	},
+	fetchChannels({commit, state}) {
+		const network = state.networks[0]; // Pobiera pierwszą sieć (dostosuj jeśli potrzebne)
+		if (!network) return; // Sprawdza, czy sieć istnieje
+		const networkId = parseInt(network.uuid.replace(/\D/g, "").slice(0, 9), 10) || 0;
+		socket.emit("input", {
+			target: networkId,
+			text: "/list",
+		});
+		socket.onAny((event, data) => {
+			console.log(`📡 Otrzymano event: ${event}`, data);
+		});
+		//socket.once("channels:list", (data) => {
+		//	commit("setChannels", data.networks.flatMap((network) => network.channels) || []);
+		//});
 	},
 };
 

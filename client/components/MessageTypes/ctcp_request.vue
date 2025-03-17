@@ -1,7 +1,7 @@
 <template>
 	<span class="content">
 		<Username :user="message.from" />
-		sent a <abbr title="Client-to-client protocol">CTCP</abbr> request:
+		wysłał zapytanie <abbr title="Protokół klient-do-klienta">CTCP</abbr>:
 		<span class="ctcp-message"><ParsedMessage :text="message.ctcpMessage" /></span>
 	</span>
 </template>

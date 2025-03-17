@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "preferGlobal": true,
   "bin": {
-    "thelounge": "index.js"
+    "chatik": "index.js"
   },
   "repository": {
     "type": "git",
@@ -39,14 +39,14 @@
     "client",
     "irc",
     "server",
-    "thelounge"
+    "chatik"
   ],
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   },
   "files": [
-    "./.thelounge_home",
+    "./.chatik_home",
     "./index.js",
     "./yarn.lock",
     "./client/index.html.tpl",

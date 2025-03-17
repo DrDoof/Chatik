@@ -138,17 +138,16 @@ function prereleaseTemplate(items) {
 
 [See the full changelog](${items.fullChangelogUrl})
 
-${
-	prereleaseType(items.version) === "rc"
-		? `This is a release candidate (RC) for v${stableVersion(
+${prereleaseType(items.version) === "rc"
+			? `This is a release candidate (RC) for v${stableVersion(
 				items.version
-		  )} to ensure maximum stability for public release.
+			)} to ensure maximum stability for public release.
 Bugs may be fixed, but no further features will be added until the next stable version.`
-		: `This is a pre-release for v${stableVersion(
+			: `This is a pre-release for v${stableVersion(
 				items.version
-		  )} to offer latest changes without having to wait for a stable release.
+			)} to offer latest changes without having to wait for a stable release.
 At this stage, features may still be added or modified until the first release candidate for this version gets released.`
-}
+		}
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -171,9 +170,8 @@ function stableTemplate(items) {
 	return `
 ## v${items.version} - ${items.date}
 
-For more details, [see the full changelog](${items.fullChangelogUrl}) and [milestone](${
-		items.milestone.url
-	}?closed=1).
+For more details, [see the full changelog](${items.fullChangelogUrl}) and [milestone](${items.milestone.url
+		}?closed=1).
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@ DESCRIPTION, ANNOUNCEMENT, ETC. @@
@@ -183,12 +181,11 @@ For more details, [see the full changelog](${items.fullChangelogUrl}) and [miles
 
 ### Changed
 
-${
-	isEmpty(items.dependencies)
-		? ""
-		: `- Update production dependencies to their latest versions:
+${isEmpty(items.dependencies)
+			? ""
+			: `- Update production dependencies to their latest versions:
 ${printDependencyList(items.dependencies)}`
-}
+		}
 
 ### Deprecated
 
@@ -204,31 +201,28 @@ ${printList(items.security)}
 
 ### Documentation
 
-${
-	items.documentation.length === 0
-		? ""
-		: `In the main repository:
+${items.documentation.length === 0
+			? ""
+			: `In the main repository:
 
 ${printList(items.documentation)}`
-}
+		}
 
-${
-	items.websiteDocumentation.length === 0
-		? ""
-		: `On the [website repository](https://github.com/thelounge/thelounge.github.io):
+${items.websiteDocumentation.length === 0
+			? ""
+			: `On the [website repository](https://github.com/thelounge/thelounge.github.io):
 
 ${printList(items.websiteDocumentation)}`
-}
+		}
 
 ### Internals
 
-${printList(items.internals)}${
-		isEmpty(items.devDependencies)
+${printList(items.internals)}${isEmpty(items.devDependencies)
 			? ""
 			: `
 - Update development dependencies to their latest versions:
 ${printDependencyList(items.devDependencies)}`
-	}
+		}
 
 @@@@@@@@@@@@@@@@@@@
 @@ UNCATEGORIZED @@
@@ -255,7 +249,7 @@ function stableVersion(prereleaseVersion) {
 
 // Generates a compare-view URL between 2 versions of The Lounge
 function fullChangelogUrl(v1, v2) {
-	return `https://github.com/thelounge/thelounge/compare/v${v1}...v${v2}`;
+	return `https://github.com/DrDoof/Chatik/compare/v${v1}...v${v2}`;
 }
 
 // This class is a facade to fetching details about commits / PRs / tags / etc.
@@ -273,7 +267,7 @@ class RepositoryFetcher {
 			.post("https://api.github.com/graphql", {
 				json: {
 					query: query,
-					variables: Object.assign(variables, {repositoryName: this.repositoryName}),
+					variables: Object.assign(variables, { repositoryName: this.repositoryName }),
 				},
 				headers: {
 					Authorization: `Bearer ${this.githubToken}`,
@@ -304,7 +298,7 @@ class RepositoryFetcher {
 				}
 			}
 		}`;
-		const data = await this.fetch(tagQuery, {tag});
+		const data = await this.fetch(tagQuery, { tag });
 		return data.repository.ref.tag.commit || data.repository.ref.tag;
 	}
 
@@ -351,11 +345,11 @@ class RepositoryFetcher {
 		// Recursive function that retrieves commits page after page until the last
 		// page or a given commit are reached.
 		const fetchPaginatedCommits = async (afterCursor = null) => {
-			const data = await this.fetch(commitsQuery, {afterCursor});
-			const {commits, pageInfo} = data.repository.ref.target.history;
+			const data = await this.fetch(commitsQuery, { afterCursor });
+			const { commits, pageInfo } = data.repository.ref.target.history;
 
-			if (commits.map(({oid}) => oid).includes(stopCommit.oid)) {
-				return _.takeWhile(commits, ({oid}) => oid !== stopCommit.oid);
+			if (commits.map(({ oid }) => oid).includes(stopCommit.oid)) {
+				return _.takeWhile(commits, ({ oid }) => oid !== stopCommit.oid);
 			} else if (pageInfo.hasNextPage) {
 				return commits.concat(await fetchPaginatedCommits(pageInfo.endCursor));
 			}
@@ -396,7 +390,7 @@ class RepositoryFetcher {
 		if (isPrerelease(newVersion)) {
 			tag = tags[0];
 		} else {
-			tag = tags.find(({name}) => !isPrerelease(name));
+			tag = tags.find(({ name }) => !isPrerelease(name));
 		}
 
 		return tag.name.substr(1);
@@ -416,7 +410,7 @@ class RepositoryFetcher {
 			}
 		}`;
 		const data = await this.fetch(milestonesQuery);
-		return data.repository.milestones.nodes.find(({title}) => title === targetVersion);
+		return data.repository.milestones.nodes.find(({ title }) => title === targetVersion);
 	}
 
 	async fetchChunkedPullRequests(numbers) {
@@ -443,8 +437,8 @@ class RepositoryFetcher {
 		const prQuery = `query fetchPullRequests($repositoryName: String!) {
 			repository(owner: "thelounge", name: $repositoryName) {
 				${numbers
-					.map(
-						(number) => `
+				.map(
+					(number) => `
 					PR${number}: pullRequest(number: ${number}) {
 						__typename
 						title
@@ -469,8 +463,8 @@ class RepositoryFetcher {
 						}
 					}
 				`
-					)
-					.join("")}
+				)
+				.join("")}
 			}
 		}`;
 		const data = await this.fetch(prQuery);
@@ -491,7 +485,7 @@ class RepositoryFetcher {
 
 // Given an array of annotated commits, returns an array of PR numbers, integers
 function pullRequestNumbersInCommits(commits) {
-	return commits.reduce((array, {pullRequestId}) => {
+	return commits.reduce((array, { pullRequestId }) => {
 		if (pullRequestId) {
 			array.push(pullRequestId);
 		}
@@ -506,8 +500,8 @@ function pullRequestNumbersInCommits(commits) {
 // The goal of this function is to return an array consisting only of pull
 // requests + commits that have been made to `master` directly.
 function combine(allCommits, allPullRequests) {
-	const commitsFromPRs = _.flatMap(allPullRequests, ({commits}) =>
-		commits.nodes.map(({commit}) => commit.oid)
+	const commitsFromPRs = _.flatMap(allPullRequests, ({ commits }) =>
+		commits.nodes.map(({ commit }) => commit.oid)
 	);
 
 	return allCommits.reduce((array, commit) => {
@@ -524,7 +518,7 @@ function combine(allCommits, allPullRequests) {
 }
 
 // Builds a Markdown link for a given author object
-function printAuthorLink({login, url}) {
+function printAuthorLink({ login, url }) {
 	return `by [@${login}](${url})`;
 }
 
@@ -607,20 +601,20 @@ function whichDependencyType(packageName) {
 	}
 }
 
-function hasLabelOrAnnotatedComment({labels, comments}, expected) {
+function hasLabelOrAnnotatedComment({ labels, comments }, expected) {
 	return hasLabel(labels, expected) || hasAnnotatedComment(comments, expected);
 }
 
 // Returns true if a label exists amongst a list of labels
 function hasLabel(labels, expected) {
-	return labels && labels.nodes.some(({name}) => name === expected);
+	return labels && labels.nodes.some(({ name }) => name === expected);
 }
 
 function hasAnnotatedComment(comments, expected) {
 	return (
 		comments &&
 		comments.nodes.some(
-			({authorAssociation, body}) =>
+			({ authorAssociation, body }) =>
 				["OWNER", "MEMBER"].includes(authorAssociation) &&
 				body.split("\r\n").includes(`[${expected}]`)
 		)
@@ -639,19 +633,19 @@ function isSkipped(entry) {
 }
 
 // Dependency update PRs are listed in a special, more concise way in the changelog.
-function isDependency({labels}) {
+function isDependency({ labels }) {
 	return hasLabel(labels, "Type: Dependencies");
 }
 
-function isDocumentation({labels}) {
+function isDocumentation({ labels }) {
 	return hasLabel(labels, "Type: Documentation");
 }
 
-function isSecurity({labels}) {
+function isSecurity({ labels }) {
 	return hasLabel(labels, "Type: Security");
 }
 
-function isDeprecation({labels}) {
+function isDeprecation({ labels }) {
 	return hasLabel(labels, "Type: Deprecation");
 }
 
@@ -659,11 +653,11 @@ function isInternal(entry) {
 	return hasLabelOrAnnotatedComment(entry, "Meta: Internal");
 }
 
-function isBug({labels}) {
+function isBug({ labels }) {
 	return hasLabel(labels, "Type: Bug");
 }
 
-function isFeature({labels}) {
+function isFeature({ labels }) {
 	return hasLabel(labels, "Type: Feature");
 }
 
@@ -677,7 +671,7 @@ function isFeature({labels}) {
 //   chore(deps): update dependency mini-css-extract-plugin to v0.4.3
 //   fix(deps): update dependency web-push to v3.3.3
 //   chore(deps): update babel monorepo to v7.1.0
-function extractPackages({title, body, url}) {
+function extractPackages({ title, body, url }) {
 	// Extract updated packages from renovate-bot's pull request body
 	let list =
 		/^This PR contains the following updates:\n\n(?:[\s\S]+?)---\|$\n([\s\S]+?)\n\n---/m.exec(
@@ -810,7 +804,7 @@ function dedupeEntries(changelog, items) {
 // Given a list of entries (pull requests, commits), retrieves GitHub usernames
 // (with format `@username`) of everyone who contributed to this version.
 function extractContributors(entries) {
-	const set = Object.values(entries).reduce((memo, {__typename, author}) => {
+	const set = Object.values(entries).reduce((memo, { __typename, author }) => {
 		if (!author) {
 			// author can be null if GH doesn't recognize them
 			return memo;
@@ -838,7 +832,7 @@ function extractContributors(entries) {
 		}
 	}, new Set());
 
-	return Array.from(set).sort((a, b) => a.localeCompare(b, "en", {sensitivity: "base"}));
+	return Array.from(set).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
 }
 
 // Main function. Given a version string (i.e. not a tag!), returns a changelog
@@ -915,7 +909,7 @@ function addToChangelog(changelog, newEntry) {
 	const changelog = await readFile(changelogPath, "utf8");
 
 	try {
-		({changelogEntry, skipped, contributors} = await generateChangelogEntry(
+		({ changelogEntry, skipped, contributors } = await generateChangelogEntry(
 			changelog,
 			version
 		));

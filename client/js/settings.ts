@@ -89,13 +89,13 @@ const defaultConfig = {
 			const themeUrl = `themes/${value}.css`;
 
 			if (!(themeEl instanceof HTMLLinkElement)) {
-				throw new Error("theme element is not a link");
+				throw new Error("Element motywu nie jest linkiem");
 			}
 
 			const hrefAttr = themeEl.attributes.getNamedItem("href");
 
 			if (!hrefAttr) {
-				throw new Error("theme is missing href attribute");
+				throw new Error("Motyw nie posiada atrybutu href");
 			}
 
 			if (hrefAttr.value === themeUrl) {
@@ -115,7 +115,7 @@ const defaultConfig = {
 			const metaSelector = document.querySelector('meta[name="theme-color"]');
 
 			if (!(metaSelector instanceof HTMLMetaElement)) {
-				throw new Error("theme meta element is not a meta element");
+				throw new Error("Element meta motywu nie jest prawidłowym elementem meta");
 			}
 
 			if (metaSelector) {

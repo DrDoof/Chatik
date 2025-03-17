@@ -6,12 +6,12 @@ socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
 
 socket.io.on("reconnect_attempt", function (attempt) {
-	store.commit("currentUserVisibleError", `Reconnecting… (attempt ${attempt})`);
+	store.commit("currentUserVisibleError", `Łączenie ponowne… (attempt ${attempt})`);
 	updateLoadingMessage();
 });
 
 socket.on("connecting", function () {
-	store.commit("currentUserVisibleError", "Connecting…");
+	store.commit("currentUserVisibleError", "Łączenie…");
 	updateLoadingMessage();
 });
 
@@ -21,7 +21,7 @@ socket.on("connect", function () {
 	// nothing is sent to the server that might have happened.
 	socket.sendBuffer = [];
 
-	store.commit("currentUserVisibleError", "Finalizing connection…");
+	store.commit("currentUserVisibleError", "Finalizowanie połączeni…");
 	updateLoadingMessage();
 });
 
@@ -32,14 +32,13 @@ function handleDisconnect(data) {
 
 	if (!socket.io.reconnection()) {
 		store.commit(
-			"currentUserVisibleError",
-			`Disconnected from the server (${message}), The Lounge does not reconnect in public mode.`
+			"currentUserVisibleError",`Rozłączono z serwerem (${message}).`
 		);
 		updateLoadingMessage();
 		return;
 	}
 
-	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
+	store.commit("currentUserVisibleError", `Oczekiwanie na połączenie… (${message})`);
 	updateLoadingMessage();
 
 	// If the server shuts down, socket.io skips reconnection

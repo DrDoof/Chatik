@@ -8,7 +8,7 @@
 		<template v-if="message.gecos">
 			<i class="realname">&#32;({{ message.gecos }})</i>
 		</template>
-		has joined the channel
+		dołączył do kanału
 	</span>
 </template>
 

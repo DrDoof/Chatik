@@ -99,7 +99,15 @@
 					>
 						<div class="scroll-down-arrow" />
 					</div>
-					<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
+					<div class="chat-sidebars">
+						<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
+						<ChannelsList
+							v-if="network.channels.length > 0"
+							:network="network"
+							:activeChannel="channel.name"
+							@select-channel="setActiveChannel"
+						/>
+					</div>
 					<MessageList
 						ref="messageList"
 						:network="network"
@@ -119,7 +127,37 @@
 		<ChatInput :network="network" :channel="channel" />
 	</div>
 </template>
+<style scoped>
+.chat-sidebars {
+	display: flex;
+	flex-direction: column; /* Ustawienie pionowe */
+	width: 180px; /* Dostosuj szerokość */
+	height: 100vh; /* Pełna wysokość ekranu */
+	overflow-y: auto; /* Włącz przewijanie, jeśli nie mieszczą się na ekranie */
+}
 
+.userlist {
+	flex: 1;
+	max-height: 50%;
+	overflow: auto;
+}
+
+.channellist {
+	flex: 1;
+	max-height: 50%;
+	overflow: auto;
+	width: 180px; /* Dostosuj szerokość */
+}
+/* Gdy `ChatUserList` jest ukryty (`display: none`), `ChannelsList` zajmuje 100% */
+.userlist[style*="display: none"] ~ .channellist {
+	max-height: 100%;
+}
+
+/* Gdy `ChannelsList` jest ukryty (`display: none`), `ChatUserList` zajmuje 100% */
+.channellist[style*="display: none"] ~ .userlist {
+	max-height: 100%;
+}
+</style>
 <script lang="ts">
 import socket from "../js/socket";
 import eventbus from "../js/eventbus";
@@ -127,6 +165,7 @@ import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
+import ChannelsList from "./ChannelList.vue";
 import SidebarToggle from "./SidebarToggle.vue";
 import MessageSearchForm from "./MessageSearchForm.vue";
 import ListBans from "./Special/ListBans.vue";
@@ -145,6 +184,7 @@ export default defineComponent({
 		MessageList,
 		ChatInput,
 		ChatUserList,
+		ChannelsList,
 		SidebarToggle,
 		MessageSearchForm,
 	},

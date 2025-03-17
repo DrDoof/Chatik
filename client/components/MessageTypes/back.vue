@@ -3,7 +3,7 @@
 		<ParsedMessage v-if="message.self" :network="network" :message="message" />
 		<template v-else>
 			<Username :user="message.from" />
-			is back
+			wrócił
 		</template>
 	</span>
 </template>

@@ -9,9 +9,9 @@ export default function useCloseChannel(channel: ClientChan) {
 			eventbus.emit(
 				"confirm-dialog",
 				{
-					title: "Remove network",
-					text: `Are you sure you want to quit and remove ${channel.name}? This cannot be undone.`,
-					button: "Remove network",
+					title: "Usuń sieć",
+					text: `Czy na pewno chcesz opuścić i usunąć ${channel.name}? Tej operacji nie można cofnąć.`,
+					button: "Usuń sieć",
 				},
 				(result: boolean) => {
 					if (!result) {

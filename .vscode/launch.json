@@ -3,8 +3,9 @@
     {
       "type": "node-terminal",
       "name": "Run Dev",
+      "program": "${workspaceFolder}/index.js",
       "request": "launch",
-      "command": "yarn dev",
+      "command": "yarn start",
       "cwd": "${workspaceFolder}"
     }
   ]

@@ -26,6 +26,13 @@ export type SharedNetworkStatus = {
 	secure: boolean;
 };
 
+export type SharedChannelList = {
+	channel: string;
+	num_users: number;
+	topic: string;
+	tags: Record<string, any>;
+};
+
 export type SharedNetwork = {
 	uuid: string;
 	name: string;
@@ -33,4 +40,5 @@ export type SharedNetwork = {
 	serverOptions: SharedServerOptions;
 	status: SharedNetworkStatus;
 	channels: SharedNetworkChan[];
+	allChannels: SharedChannelList[];
 };

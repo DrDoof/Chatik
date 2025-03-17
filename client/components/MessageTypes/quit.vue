@@ -1,8 +1,7 @@
 <template>
 	<span class="content">
 		<Username :user="message.from" />
-		<i class="hostmask"> (<ParsedMessage :network="network" :text="message.hostmask" />)</i> has
-		quit
+		<i class="hostmask"> (<ParsedMessage :network="network" :text="message.hostmask" />)</i> opuścił czat
 		<i v-if="message.text" class="quit-reason"
 			>(<ParsedMessage :network="network" :message="message" />)</i
 		>

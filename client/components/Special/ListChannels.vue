@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import {defineComponent, PropType, ref, onMounted, onUnmounted} from "vue";
 import {ClientChan, ClientNetwork} from "../../js/types";
 import ParsedMessage from "../ParsedMessage.vue";
 
@@ -31,6 +31,29 @@ export default defineComponent({
 	props: {
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
+	},
+	setup() {
+		const refreshKey = ref(0);
+		let refreshInterval: number | null = null;
+
+		// Funkcja odświeżająca komponent
+		const refreshTemplate = () => {
+			refreshKey.value++;
+		};
+
+		// Uruchamiamy odświeżanie co 5 sekund
+		onMounted(() => {
+			refreshInterval = setInterval(refreshTemplate, 60000);
+		});
+
+		// Czyszczenie interwału po usunięciu komponentu
+		onUnmounted(() => {
+			if (refreshInterval) {
+				clearInterval(refreshInterval);
+			}
+		});
+
+		return {refreshKey};
 	},
 });
 </script>

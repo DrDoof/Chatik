@@ -70,7 +70,7 @@ export default async function (
 		dev: false,
 	}
 ) {
-	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
+	log.info(`Chatik ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
 	})`);
@@ -509,6 +509,8 @@ function initializeClient(
 		(network as NetworkWithIrcFramework).edit(client, data);
 	});
 
+	socket.on("network:chanlist", (data) => {});
+
 	socket.on("history:clear", (data) => {
 		if (_.isPlainObject(data)) {
 			client.clearHistory(data);
@@ -680,8 +682,8 @@ function initializeClient(
 				client.manager.webPush.pushSingle(client, registration, {
 					type: "notification",
 					timestamp: Date.now(),
-					title: "The Lounge",
-					body: "🚀 Push notifications have been enabled",
+					title: "Chatik",
+					body: "🚀 Powiadomienia push zostały włączone.",
 				});
 			}
 		});

@@ -87,7 +87,7 @@ program
 					log.error(
 						`${colors.red(
 							humanVersion
-						)} does not support The Lounge v${Helper.getVersionNumber()}. Supported version(s): ${
+						)} does not support Chatik v${Helper.getVersionNumber()}. Supported version(s): ${
 							json.thelounge.supports
 						}`
 					);

@@ -14,7 +14,7 @@ socket.on("join", function (data) {
 	const clientChan: ClientChan = toClientChan(data.chan);
 	network.channels.splice(data.index || -1, 0, clientChan);
 
-	// Queries do not automatically focus, unless the user did a whois
+	// Zapytania nie przechodzą automatycznie na pierwszy plan, chyba że użytkownik wykonał whois
 	if (data.chan.type === "query" && !data.shouldOpen) {
 		return;
 	}
@@ -25,6 +25,6 @@ socket.on("join", function (data) {
 		switchToChannel(chan.channel);
 	} else {
 		// eslint-disable-next-line no-console
-		console.error("Could not find channel", data.chan.id);
+		console.error("Nie można znaleźć kanału", data.chan.id);
 	}
 });

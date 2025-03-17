@@ -137,8 +137,8 @@ function notifyMessage(
 				const nick = msg.from && msg.from.nick ? msg.from.nick : "unkonown";
 
 				if (msg.type === MessageType.INVITE) {
-					title = "New channel invite:";
-					body = nick + " invited you to " + msg.channel;
+					title = "Nowe zaproszenie do kanału:";
+					body = nick + " zaprosił(a) Cię do " + msg.channel;
 				} else {
 					title = nick;
 
@@ -147,7 +147,7 @@ function notifyMessage(
 					}
 
 					if (msg.type === MessageType.MESSAGE) {
-						title += " says:";
+						title += " mówi:";
 					}
 
 					// TODO: fix msg type and get rid of that conditional
@@ -191,7 +191,7 @@ function notifyMessage(
 						});
 					}
 				} catch (exception) {
-					// `new Notification(...)` is not supported and should be silenced.
+					// `new Notification(...)` nie jest obsługiwane i powinno zostać wyciszone.
 				}
 			}
 		}

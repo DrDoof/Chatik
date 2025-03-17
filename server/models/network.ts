@@ -106,6 +106,7 @@ class Network {
 	saslAccount!: string;
 	saslPassword!: string;
 	channels!: Chan[];
+	allChannels!: Chan[];
 	uuid!: string;
 	proxyHost!: string;
 	proxyPort!: number;
@@ -170,6 +171,7 @@ class Network {
 			proxyPassword: "",
 			proxyEnabled: false,
 
+			allChannels: [],
 			chanCache: [],
 			ignoreList: [],
 			keepNick: null,
@@ -311,6 +313,12 @@ class Network {
 			"znc.in/self-message", // Legacy echo-message for ZNC
 			"znc.in/playback", // See http://wiki.znc.in/Playback
 		]);
+
+		// 🔹 Po zarejestrowaniu na serwerze, pobierz listę kanałów
+		this.irc.on("registered", () => {
+			console.log("✅ Połączono z serwerem IRC, pobieram listę kanałów...");
+			this.irc.list(); // ⬅️ Wysyła komendę /LIST do serwera IRC
+		});
 	}
 
 	setIrcFrameworkOptions(this: NetworkWithIrcFramework, client: Client) {
@@ -508,6 +516,7 @@ class Network {
 			channels: this.channels.map((channel) =>
 				channel.getFilteredClone(lastActiveChannel, lastMessage)
 			),
+			allChannels: [],
 		};
 	}
 

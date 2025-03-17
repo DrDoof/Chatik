@@ -1,0 +1,19 @@
+# Ignorowanie plików systemowych i konfiguracyjnych
+.git
+.gitignore
+.DS_Store
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignorowanie plików środowiskowych
+.env
+.env.local
+.env.production
+
+# Ignorowanie plików kompilacji
+dist
+build
+out
+coverage
+

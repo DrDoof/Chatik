@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<h2>Messages</h2>
+		<h2>Wiadomości</h2>
 		<div>
 			<label class="opt">
 				<input :checked="store.state.settings.motd" type="checkbox" name="motd" />
-				Show <abbr title="Message Of The Day">MOTD</abbr>
+				Pokazuj <abbr title="Wiadomość dnia">MOTD</abbr>
 			</label>
 		</div>
 		<div>
@@ -24,7 +24,7 @@
 					type="checkbox"
 					name="use12hClock"
 				/>
-				Uzyaj zegara 12-godzinnego
+				Używaj zegara 12-godzinnego
 			</label>
 		</div>
 		<template v-if="store.state.serverConfiguration?.prefetch">
@@ -43,10 +43,10 @@
 			</div>
 		</template>
 		<h2 id="label-status-messages">
-			Status messages
+			Wiadomości statusowe
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-delay"
-				aria-label="Joins, parts, quits, kicks, nick changes, and mode changes"
+				aria-label="Dołączenia, odejścia, rozłączenia, wyrzucenia, zmiany nicków i zmiany trybów"
 			>
 				<button class="extra-help" />
 			</span>
@@ -80,7 +80,7 @@
 				Ukryj wszystkie wiadomości statusowe
 			</label>
 		</div>
-		<h2>Dodatki </h2>
+		<h2>Dodatki</h2>
 		<div>
 			<label class="opt">
 				<input
@@ -100,30 +100,28 @@
 			</label>
 		</div>
 		<div>
-			<label class="opt">
-				<label for="nickPostfix" class="opt">
-					Przyrostek autouzupełniania nicku
-					<span
-						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="Przyrostek autouzupełniania nicku (np. przecinek, dwukropek, spacja)"
-					>
-						<button class="extra-help" />
-					</span>
-				</label>
-				<input
-					id="nickPostfix"
-					:value="store.state.settings.nickPostfix"
-					type="text"
-					name="nickPostfix"
-					class="input"
-					placeholder="Nick autocomplete postfix (e.g. ', ')"
-				/>
+			<label class="opt" for="nickPostfix">
+				Przyrostek autouzupełniania nicku
+				<span
+					class="tooltipped tooltipped-n tooltipped-no-delay"
+					aria-label="Przyrostek dodawany do nicku po jego autouzupełnieniu (np. przecinek, dwukropek, spacja)"
+				>
+					<button class="extra-help" />
+				</span>
 			</label>
+			<input
+				id="nickPostfix"
+				:value="store.state.settings.nickPostfix"
+				type="text"
+				name="nickPostfix"
+				class="input"
+				placeholder="Przyrostek autouzupełniania nicku (np. ', ')"
+			/>
 		</div>
 
 		<h2>Skórka</h2>
 		<div>
-			<label for="theme-select" class="sr-only">Theme</label>
+			<label for="theme-select" class="sr-only">Skórka</label>
 			<select
 				id="theme-select"
 				:value="store.state.settings.theme"
@@ -143,14 +141,14 @@
 		<div>
 			<h2>Własna skórka</h2>
 			<label for="user-specified-css-input" class="sr-only">
-				Własna skórka. Mozesz nadpisać styl CSS swoim wklejając go w to pole.
+				Własna skórka. Możesz nadpisać styl CSS, wklejając go w to pole.
 			</label>
 			<textarea
 				id="user-specified-css-input"
 				:value="store.state.settings.userStyles"
 				class="input"
 				name="userStyles"
-				placeholder="/* Mozesz nadpisać styl CSS swoim wklejając go w to pole */"
+				placeholder="/* Możesz nadpisać styl CSS, wklejając go w to pole */"
 			/>
 		</div>
 	</div>

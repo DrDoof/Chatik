@@ -5,16 +5,16 @@ import {store} from "../store";
 socket.once("configuration", function (data) {
 	store.commit("serverConfiguration", data);
 
-	// 'theme' setting depends on serverConfiguration.themes so
-	// settings cannot be applied before this point
+	// Ustawienie 'theme' zależy od serverConfiguration.themes,
+	// więc ustawienia nie mogą zostać zastosowane przed tym momentem
 	void store.dispatch("settings/applyAll");
 
 	if (data.fileUpload) {
 		upload.initialize();
 	}
 
-	// If localStorage contains a theme that does not exist on this server, switch
-	// back to its default theme.
+	// Jeśli localStorage zawiera motyw, który nie istnieje na tym serwerze,
+	// zmień na domyślny motyw.
 	const currentTheme = data.themes.find((t) => t.name === store.state.settings.theme);
 
 	if (currentTheme === undefined) {
@@ -31,7 +31,7 @@ socket.once("configuration", function (data) {
 	if (document.body.classList.contains("public")) {
 		window.addEventListener("beforeunload", (e) => {
 			e.preventDefault();
-			e.returnValue = "Are you sure you want to navigate away from this page?";
+			e.returnValue = "Czy na pewno chcesz opuścić tę stronę?";
 		});
 	}
 });

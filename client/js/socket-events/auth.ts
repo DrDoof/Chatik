@@ -12,7 +12,7 @@ declare global {
 }
 
 socket.on("auth:success", function () {
-	store.commit("currentUserVisibleError", "Loading messages…");
+	store.commit("currentUserVisibleError", "Ładowanie wiadomości…");
 	updateLoadingMessage();
 });
 
@@ -20,7 +20,7 @@ socket.on("auth:failed", async function () {
 	storage.remove("token");
 
 	if (store.state.appLoaded) {
-		return reloadPage("Authentication failed, reloading…");
+		return reloadPage("Błąd uwierzytelniania, ponowne ładowanie…");
 	}
 
 	await showSignIn();
@@ -30,7 +30,7 @@ socket.on("auth:start", async function (serverHash) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (lastServerHash && serverHash !== lastServerHash) {
-		return reloadPage("Server restarted, reloading…");
+		return reloadPage("Serwer został zrestartowany, ponowne ładowanie…");
 	}
 
 	lastServerHash = serverHash;
@@ -46,7 +46,7 @@ socket.on("auth:start", async function (serverHash) {
 
 	// If we have user and token stored, perform auth without showing sign-in first
 	if (doFastAuth) {
-		store.commit("currentUserVisibleError", "Authorizing…");
+		store.commit("currentUserVisibleError", "Autoryzacja…");
 		updateLoadingMessage();
 
 		let lastMessage = -1;

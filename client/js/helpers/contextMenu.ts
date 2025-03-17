@@ -43,10 +43,10 @@ export function generateChannelContextMenu(
 	};
 
 	const closeMap = {
-		lobby: "Remove",
-		channel: "Leave",
-		query: "Close",
-		special: "Close",
+		lobby: "Usuń",
+		channel: "Opuść",
+		query: "Zamknij",
+		special: "Zamknij",
 	};
 
 	let items: ContextMenuItem[] = [
@@ -66,19 +66,19 @@ export function generateChannelContextMenu(
 		items = [
 			...items,
 			{
-				label: "Edit this network…",
+				label: "Edytuj tę sieć…",
 				type: "item",
 				class: "edit",
 				link: `/edit-network/${network.uuid}`,
 			},
 			{
-				label: "Join a channel…",
+				label: "Dołącz do kanału…",
 				type: "item",
 				class: "join",
 				action: () => (network.isJoinChannelShown = true),
 			},
 			{
-				label: "List all channels",
+				label: "Wyświetl wszystkie kanały",
 				type: "item",
 				class: "list",
 				action: () =>
@@ -88,7 +88,7 @@ export function generateChannelContextMenu(
 					}),
 			},
 			{
-				label: "List ignored users",
+				label: "Wyświetl ignorowanych użytkowników",
 				type: "item",
 				class: "list",
 				action: () =>
@@ -99,7 +99,7 @@ export function generateChannelContextMenu(
 			},
 			network.status.connected
 				? {
-						label: "Disconnect",
+						label: "Rozłącz",
 						type: "item",
 						class: "disconnect",
 						action: () =>
@@ -109,7 +109,7 @@ export function generateChannelContextMenu(
 							}),
 				  }
 				: {
-						label: "Connect",
+						label: "Połącz",
 						type: "item",
 						class: "connect",
 						action: () =>
@@ -124,7 +124,7 @@ export function generateChannelContextMenu(
 	// Add menu items for channels
 	if (channel.type === ChanType.CHANNEL) {
 		items.push({
-			label: "Edit topic",
+			label: "Edytuj temat",
 			type: "item",
 			class: "edit",
 			action() {
@@ -133,7 +133,7 @@ export function generateChannelContextMenu(
 			},
 		});
 		items.push({
-			label: "List banned users",
+			label: "Wyświetl zbanowanych użytkowników",
 			type: "item",
 			class: "list",
 			action() {
@@ -149,7 +149,7 @@ export function generateChannelContextMenu(
 	if (channel.type === ChanType.QUERY) {
 		items.push(
 			{
-				label: "User information",
+				label: "Informacje o użytkowniku",
 				type: "item",
 				class: "action-whois",
 				action() {
@@ -161,7 +161,7 @@ export function generateChannelContextMenu(
 				},
 			},
 			{
-				label: "Ignore user",
+				label: "Ignoruj użytkownika",
 				type: "item",
 				class: "action-ignore",
 				action() {
@@ -176,16 +176,16 @@ export function generateChannelContextMenu(
 
 	if (channel.type === ChanType.CHANNEL || channel.type === ChanType.QUERY) {
 		items.push({
-			label: "Clear history",
+			label: "Wyczyść historię",
 			type: "item",
 			class: "clear-history",
 			action() {
 				eventbus.emit(
 					"confirm-dialog",
 					{
-						title: "Clear history",
-						text: `Are you sure you want to clear history for ${channel.name}? This cannot be undone.`,
-						button: "Clear history",
+						title: "Wyczyść historię",
+						text: `Czy na pewno chcesz wyczyścić historię dla ${channel.name}? Tej operacji nie można cofnąć.`,
+						button: "Wyczyść historię",
 					},
 					(result) => {
 						if (!result) {
@@ -202,9 +202,9 @@ export function generateChannelContextMenu(
 	}
 
 	const humanFriendlyChanTypeMap: Record<string, string> = {
-		lobby: "network",
-		channel: "channel",
-		query: "conversation",
+		lobby: "sieć",
+		channel: "kanał",
+		query: "konwersację",
 	};
 
 	// We don't allow the muting of ChanType.SPECIAL channels
@@ -214,7 +214,7 @@ export function generateChannelContextMenu(
 		const chanType = humanFriendlyChanTypeMap[channel.type];
 
 		items.push({
-			label: channel.muted ? `Unmute ${chanType}` : `Mute ${chanType}`,
+			label: channel.muted ? `Wyłącz wyciszenie ${chanType}` : `Wycisz ${chanType}`,
 			type: "item",
 			class: "mute",
 			action() {
@@ -267,7 +267,7 @@ export function generateInlineChannelContextMenu(
 	if (channel) {
 		return [
 			{
-				label: "Go to channel",
+				label: "Przejdź do kanału",
 				type: "item",
 				class: "chan",
 				link: `/chan-${channel.id}`,
@@ -277,7 +277,7 @@ export function generateInlineChannelContextMenu(
 
 	return [
 		{
-			label: "Join channel",
+			label: "Dołącz do kanału",
 			type: "item",
 			class: "join",
 			action: join,
@@ -319,13 +319,13 @@ export function generateUserContextMenu(
 			type: "divider",
 		},
 		{
-			label: "User information",
+			label: "Informacje o użytkowniku",
 			type: "item",
 			class: "action-whois",
 			action: whois,
 		},
 		{
-			label: "Ignore user",
+			label: "Ignoruj użytkownika",
 			type: "item",
 			class: "action-ignore",
 			action() {
@@ -336,7 +336,7 @@ export function generateUserContextMenu(
 			},
 		},
 		{
-			label: "Direct messages",
+			label: "Prywatne wiadomości",
 			type: "item",
 			class: "action-query",
 			action() {
@@ -377,7 +377,7 @@ export function generateUserContextMenu(
 				return "";
 			}
 
-			const res = name ? `Revoke ${name} (-${m.mode})` : `Mode -${m.mode}`;
+			const res = name ? `Odbierz ${name} (-${m.mode})` : `Tryb -${m.mode}`;
 			return res;
 		},
 		give(m: {symbol: string; mode: string}) {
@@ -387,7 +387,7 @@ export function generateUserContextMenu(
 				return "";
 			}
 
-			const res = name ? `Give ${name} (+${m.mode})` : `Mode +${m.mode}`;
+			const res = name ? `Nadaj ${name} (+${m.mode})` : `Tryb +${m.mode}`;
 			return res;
 		},
 	};
@@ -452,7 +452,7 @@ export function generateUserContextMenu(
 		// Check if the target user has no mode or a mode lower than ours.
 		if (user.modes.length === 0 || compare(currentChannelUser.modes[0], user.modes[0])) {
 			items.push({
-				label: "Kick",
+				label: "Wyrzuć",
 				type: "item",
 				class: "action-kick",
 				action() {

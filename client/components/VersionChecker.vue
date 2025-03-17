@@ -13,7 +13,7 @@
 		</p>
 		<p v-if="store.state.versionStatus === 'new-packages'">
 			Chatik jest aktualny, ale istnieją nieaktualne pakiety Uruchom
-			<code>thelounge upgrade</code> na serwerze, aby zaktualizować pakiety.
+			<code>chatik upgrade</code> na serwerze, aby zaktualizować pakiety.
 		</p>
 		<template v-if="store.state.versionStatus === 'up-to-date'">
 			<p>Chatik jest aktualny!</p>

@@ -1,10 +1,10 @@
 <template>
-	<div id="help" class="window" role="tabpanel" aria-label="Help">
+	<div id="help" class="window" role="tabpanel" aria-label="Pomoc">
 		<div class="header">
 			<SidebarToggle />
 		</div>
 		<div class="container">
-			<h1 class="title">Help</h1>
+			<h1 class="title">Pomoc</h1>
 
 			<h2 class="help-version-title">
 				<span>O Czatiku</span>
@@ -22,8 +22,8 @@
 
 				<template v-if="store.state.serverConfiguration?.gitCommit">
 					<p>
-						The Lounge is running from source (<a
-							:href="`https://github.com/thelounge/thelounge/tree/${store.state.serverConfiguration?.gitCommit}`"
+						Chatik jest uruchomiony z kodu źródłowego (<a
+							:href="`https://github.com/DrDoof/Chatik/tree/${store.state.serverConfiguration?.gitCommit}`"
 							target="_blank"
 							rel="noopener"
 							>commit <code>{{ store.state.serverConfiguration?.gitCommit }}</code></a
@@ -32,38 +32,32 @@
 
 					<ul>
 						<li>
-							Compare
+							Porównaj
 							<a
-								:href="`https://github.com/thelounge/thelounge/compare/${store.state.serverConfiguration?.gitCommit}...master`"
+								:href="`https://github.com/DrDoof/Chatik/compare/${store.state.serverConfiguration?.gitCommit}...master`"
 								target="_blank"
 								rel="noopener"
-								>between
-								<code>{{ store.state.serverConfiguration?.gitCommit }}</code> and
+								><code>{{ store.state.serverConfiguration?.gitCommit }}</code> i
 								<code>master</code></a
 							>
-							to see what you are missing
+							aby zobaczyć, czego Ci brakuje
 						</li>
 						<li>
-							Compare
+							Porównaj
 							<a
-								:href="`https://github.com/thelounge/thelounge/compare/${store.state.serverConfiguration?.version}...${store.state.serverConfiguration?.gitCommit}`"
+								:href="`https://github.com/DrDoof/Chatik/compare/${store.state.serverConfiguration?.version}...${store.state.serverConfiguration?.gitCommit}`"
 								target="_blank"
 								rel="noopener"
-								>between
-								<code>{{ store.state.serverConfiguration?.version }}</code> and
+								><code>{{ store.state.serverConfiguration?.version }}</code> i
 								<code>{{ store.state.serverConfiguration?.gitCommit }}</code></a
 							>
-							to see your local changes
+							aby zobaczyć Twoje lokalne zmiany
 						</li>
 					</ul>
 				</template>
 
 				<p>
-					<a
-						href="https://chatik.pl/"
-						target="_blank"
-						rel="noopener"
-						class="website-link"
+					<a href="https://chatik.pl/" target="_blank" rel="noopener" class="website-link"
 						>Website</a
 					>
 				</p>
@@ -78,7 +72,7 @@
 				</p>
 				<p>
 					<a
-						href="https://github.com/thelounge/thelounge/issues/new"
+						href="https://github.com/DrDoof/Chatik/issues/new"
 						target="_blank"
 						rel="noopener"
 						class="report-issue-link"
@@ -113,7 +107,7 @@
 			<div v-if="isTouch" class="help-item">
 				<div class="subject gesture">Przesunięcie dwoma palcami w prawo</div>
 				<div class="description">
-					<p> Przełącz na poprzednie okno na liście kanałów.</p>
+					<p>Przełącz na poprzednie okno na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -125,7 +119,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
-					<p> Przełącz na następne lobby na liście kanałów.</p>
+					<p>Przełącz na następne lobby na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -165,7 +159,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the next window in the channel list.</p>
+					<p>Przełącz na następne okno na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -175,7 +169,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>↑</kbd></span>
 				</div>
 				<div class="description">
-					<p>Switch to the previous window in the channel list.</p>
+					<p>Przełącz na poprzednie okno na liście kanałów.</p>
 				</div>
 			</div>
 
@@ -185,7 +179,10 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
-					<p>Przełącz na następne okno z nieprzeczytanymi wiadomościami na liście kanałów.</p>
+					<p>
+						Przełącz na następne okno z nieprzeczytanymi wiadomościami na liście
+						kanałów.
+					</p>
 				</div>
 			</div>
 
@@ -195,7 +192,10 @@
 					<span v-else><kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>↑</kbd></span>
 				</div>
 				<div class="description">
-					<p>Przełącz na poprzednie okno z nieprzeczytanymi wiadomościami na liście kanałów.</p>
+					<p>
+						Przełącz na poprzednie okno z nieprzeczytanymi wiadomościami na liście
+						kanałów.
+					</p>
 				</div>
 			</div>
 
@@ -225,7 +225,7 @@
 					<span v-else><kbd>⌥</kbd> <kbd>U</kbd></span>
 				</div>
 				<div class="description">
-					<p>Toggle channel user list.</p>
+					<p>Przełącz listę użytkowników kanału.</p>
 				</div>
 			</div>
 
@@ -265,7 +265,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Zamknij bieżące okno kontekstowe (menu kontekstowe, przeglądarka obrazów, 
+						Zamknij bieżące okno kontekstowe (menu kontekstowe, przeglądarka obrazów,
 						edycja tematu itp.) i usuń fokus z pola wprowadzania.
 					</p>
 				</div>
@@ -279,15 +279,15 @@
 					<span v-else><kbd>⌘</kbd> <kbd>K</kbd></span>
 				</div>
 				<div class="description">
-										<p>
-						Oznacz dowolny tekst wpisany po tym skrócie jako kolorowy. Po użyciu tego 
-						skrótu wpisz liczbę całkowitą z zakresu <code>0—15</code>, aby wybrać 
-						żądany kolor, lub skorzystaj z menu autouzupełniania, aby wybrać nazwę koloru 
+					<p>
+						Oznacz dowolny tekst wpisany po tym skrócie jako kolorowy. Po użyciu tego
+						skrótu wpisz liczbę całkowitą z zakresu <code>0—15</code>, aby wybrać żądany
+						kolor, lub skorzystaj z menu autouzupełniania, aby wybrać nazwę koloru
 						(zobacz poniżej).
 					</p>
 					<p>
-						Kolor tła można określić, dodając po przecinku kolejną liczbę całkowitą 
-						z zakresu <code>0—15</code> po numerze koloru pierwszego planu 
+						Kolor tła można określić, dodając po przecinku kolejną liczbę całkowitą z
+						zakresu <code>0—15</code> po numerze koloru pierwszego planu
 						(autouzupełnianie również działa).
 					</p>
 					<p>
@@ -296,7 +296,8 @@
 							href="https://modern.ircdocs.horse/formatting.html#colors"
 							target="_blank"
 							rel="noopener"
-							>tutaj</a>
+							>tutaj</a
+						>
 						.
 					</p>
 				</div>
@@ -379,16 +380,15 @@
 				</div>
 			</div>
 
-			<h2>Autocompletion</h2>
+			<h2>Autouzupełnianie</h2>
 
-				<p>
-					Aby automatycznie uzupełniać pseudonimy, kanały, komendy i emoji, wpisz jeden z
-					poniższych znaków, aby otworzyć listę sugestii. Użyj klawiszy <kbd>↑</kbd> i
-					<kbd>↓</kbd>, aby podświetlić element, a następnie wstaw go, naciskając <kbd>Tab</kbd> lub
-					<kbd>Enter</kbd> (lub klikając wybrany element).
-				</p>
-				<p>Autouzupełnianie można wyłączyć w ustawieniach.</p>
-			
+			<p>
+				Aby automatycznie uzupełniać pseudonimy, kanały, komendy i emoji, wpisz jeden z
+				poniższych znaków, aby otworzyć listę sugestii. Użyj klawiszy <kbd>↑</kbd> i
+				<kbd>↓</kbd>, aby podświetlić element, a następnie wstaw go, naciskając
+				<kbd>Tab</kbd> lub <kbd>Enter</kbd> (lub klikając wybrany element).
+			</p>
+			<p>Autouzupełnianie można wyłączyć w ustawieniach.</p>
 
 			<div class="help-item">
 				<div class="subject">
@@ -423,8 +423,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Emoji (uwaga: wymaga wpisania co najmniej dwóch znaków, aby uniknąć konfliktu
-						z popularnymi emotikonami, takimi jak <code>:)</code>)
+						Emoji (uwaga: wymaga wpisania co najmniej dwóch znaków, aby uniknąć
+						konfliktu z popularnymi emotikonami, takimi jak <code>:)</code>)
 					</p>
 				</div>
 			</div>
@@ -454,8 +454,10 @@
 					<code>/ban nick</code>
 				</div>
 				<div class="description">
-					<p>Zbanuj użytkownika na bieżącym kanale (<code>+b</code>). Może to być 
-						pseudonim lub maska hosta.</p>
+					<p>
+						Zbanuj użytkownika na bieżącym kanale (<code>+b</code>). Może to być
+						pseudonim lub maska hosta.
+					</p>
 				</div>
 			</div>
 
@@ -486,8 +488,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Połącz się z nową siecią IRC. Jeśli <code>port</code> zaczyna się od
-						znaku <code>+</code>, połączenie będzie zabezpieczone przy użyciu TLS.
+						Połącz się z nową siecią IRC. Jeśli <code>port</code> zaczyna się od znaku
+						<code>+</code>, połączenie będzie zabezpieczone przy użyciu TLS.
 					</p>
 					<p>Alias: <code>/server</code></p>
 				</div>
@@ -499,8 +501,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Wyślij żądanie <abbr title="Client-to-client protocol">CTCP</abbr>.
-						Więcej na ten temat można przeczytać w
+						Wyślij żądanie <abbr title="Client-to-client protocol">CTCP</abbr>. Więcej
+						na ten temat można przeczytać w
 						<a
 							href="https://en.wikipedia.org/wiki/Client-to-client_protocol"
 							target="_blank"
@@ -529,8 +531,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Usuń uprawnienia do mówienia (<code>-v</code>) jednemu lub kilku użytkownikom
-						na bieżącym kanale.
+						Usuń uprawnienia do mówienia (<code>-v</code>) jednemu lub kilku
+						użytkownikom na bieżącym kanale.
 					</p>
 				</div>
 			</div>
@@ -563,8 +565,8 @@
 				<div class="description">
 					<p>
 						Zaproś użytkownika na określony kanał. Jeśli
-						<code>channel</code> zostanie pominięty, użytkownik zostanie zaproszony na bieżący
-						kanał.
+						<code>channel</code> zostanie pominięty, użytkownik zostanie zaproszony na
+						bieżący kanał.
 					</p>
 				</div>
 			</div>
@@ -575,8 +577,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Zablokuj wszystkie wiadomości od określonego użytkownika w bieżącej sieci. Może to
-						być pseudonim lub maska hosta.
+						Zablokuj wszystkie wiadomości od określonego użytkownika w bieżącej sieci.
+						Może to być pseudonim lub maska hosta.
 					</p>
 				</div>
 			</div>
@@ -596,8 +598,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Dołącz do kanału. Hasło jest wymagane tylko w chronionych kanałach i zazwyczaj
-						może zostać pominięte.
+						Dołącz do kanału. Hasło jest wymagane tylko w chronionych kanałach i
+						zazwyczaj może zostać pominięte.
 					</p>
 				</div>
 			</div>
@@ -617,8 +619,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Wyrzuć i zbanuj (<code>+b</code>) użytkownika z bieżącego kanału. W przeciwieństwie
-						do <code>/ban</code>, można używać tylko pseudonimów (a nie masek hostów).
+						Wyrzuć i zbanuj (<code>+b</code>) użytkownika z bieżącego kanału. W
+						przeciwieństwie do <code>/ban</code>, można używać tylko pseudonimów (a nie
+						masek hostów).
 					</p>
 				</div>
 			</div>
@@ -650,9 +653,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Ustaw określone flagi dla bieżącego kanału, jeśli aktywne okno to kanał;
-						dla innego użytkownika, jeśli aktywne okno to okno prywatnej wiadomości;
-						lub dla siebie, jeśli aktywne okno to okno serwera.
+						Ustaw określone flagi dla bieżącego kanału, jeśli aktywne okno to kanał; dla
+						innego użytkownika, jeśli aktywne okno to okno prywatnej wiadomości; lub dla
+						siebie, jeśli aktywne okno to okno serwera.
 					</p>
 				</div>
 			</div>
@@ -672,10 +675,10 @@
 				</div>
 				<div class="description">
 					<p>
-						Zablokuj powiadomienia dla kanału. Wyłącza to wskaźnik podświetlenia,
-						ukrywa wzmianki i blokuje powiadomienia push. Wyciszenie lobby sieciowego
-						wycisza całą sieć. Jeśli nie podano kanału, zostanie wyciszony bieżący
-						kanał. Cofnij zmiany poleceniem <code>/unmute</code>.
+						Zablokuj powiadomienia dla kanału. Wyłącza to wskaźnik podświetlenia, ukrywa
+						wzmianki i blokuje powiadomienia push. Wyciszenie lobby sieciowego wycisza
+						całą sieć. Jeśli nie podano kanału, zostanie wyciszony bieżący kanał. Cofnij
+						zmiany poleceniem <code>/unmute</code>.
 					</p>
 				</div>
 			</div>
@@ -703,7 +706,10 @@
 					<code>/op nick [...nick]</code>
 				</div>
 				<div class="description">
-					<p>Przyznaj uprawnienia operatora (<code>+o</code>) jednemu lub kilku użytkownikom na bieżącym kanale.</p>
+					<p>
+						Przyznaj uprawnienia operatora (<code>+o</code>) jednemu lub kilku
+						użytkownikom na bieżącym kanale.
+					</p>
 				</div>
 			</div>
 
@@ -713,8 +719,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Zamknij określony kanał lub okno prywatnej wiadomości, lub bieżący
-						kanał, jeśli <code>channel</code> nie został podany.
+						Zamknij określony kanał lub okno prywatnej wiadomości, lub bieżący kanał,
+						jeśli <code>channel</code> nie został podany.
 					</p>
 					<p>Aliasy: <code>/close</code>, <code>/leave</code></p>
 				</div>
@@ -726,8 +732,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Opuszcza i natychmiast ponownie dołącza do bieżącego kanału. Przydatne do szybkiego uzyskania 
-						uprawnień operatora od ChanServ na pustym kanale.
+						Opuszcza i natychmiast ponownie dołącza do bieżącego kanału. Przydatne do
+						szybkiego uzyskania uprawnień operatora od ChanServ na pustym kanale.
 					</p>
 					<p>Alias: <code>/cycle</code></p>
 				</div>
@@ -785,8 +791,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Pobierz temat bieżącego kanału. Jeśli podano <code>newtopic</code>,
-						ustawi nowy temat na bieżącym kanale.
+						Pobierz temat bieżącego kanału. Jeśli podano <code>newtopic</code>, ustawi
+						nowy temat na bieżącym kanale.
 					</p>
 				</div>
 			</div>
@@ -821,8 +827,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Anuluj wyciszenie określonych kanałów lub bieżącego kanału, jeśli nie podano kanału.
-						Zobacz <code>/mute</code>, aby uzyskać więcej informacji.
+						Anuluj wyciszenie określonych kanałów lub bieżącego kanału, jeśli nie podano
+						kanału. Zobacz <code>/mute</code>, aby uzyskać więcej informacji.
 					</p>
 				</div>
 			</div>
@@ -833,7 +839,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Przyznaj prawo głosu (<code>+v</code>) jednemu lub kilku użytkownikom na bieżącym kanale.
+						Przyznaj prawo głosu (<code>+v</code>) jednemu lub kilku użytkownikom na
+						bieżącym kanale.
 					</p>
 				</div>
 			</div>

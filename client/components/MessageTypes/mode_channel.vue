@@ -1,6 +1,6 @@
 <template>
 	<span class="content">
-		Channel mode is <b>{{ message.text }}</b>
+		Tryb kanału to <b>{{ message.text }}</b>
 	</span>
 </template>
 

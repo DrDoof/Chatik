@@ -116,7 +116,7 @@ class Uploader {
 
 		if (!store.state.isConnected) {
 			this.handleResponse({
-				error: `You are currently disconnected, unable to initiate upload process.`,
+				error: `Jesteś obecnie rozłączony, nie można rozpocząć wysyłania pliku.`,
 			});
 
 			return;
@@ -132,7 +132,7 @@ class Uploader {
 
 			if (maxFileSize > 0 && file.size > maxFileSize) {
 				this.handleResponse({
-					error: `File ${file.name} is over the maximum allowed size`,
+					error: `Plik ${file.name} przekracza maksymalny dozwolony rozmiat`,
 				});
 
 				continue;
@@ -204,7 +204,7 @@ class Uploader {
 				const ctx = canvas.getContext("2d");
 
 				if (!ctx) {
-					throw new Error("Could not get canvas context in upload");
+					throw new Error("Nie udało się uzyskać kontekstu canvas podczas przesyłania pliku");
 				}
 
 				ctx.drawImage(img, 0, 0);
@@ -288,7 +288,7 @@ class Uploader {
 		const textbox = document.getElementById("input");
 
 		if (!(textbox instanceof HTMLTextAreaElement)) {
-			throw new Error("Could not find textbox in upload");
+			throw new Error("Nie znaleziono pola tekstowego podczas przesyłania pliku");
 		}
 
 		const initStart = textbox.selectionStart;

@@ -26,7 +26,7 @@
 					<p>
 						<a
 							v-if="store.state.serverConfiguration?.version"
-							:href="`https://github.com/thelounge/thelounge/releases/tag/v${store.state.serverConfiguration?.version}`"
+							:href="`https://github.com/DrDoof/Chatik/releases/tag/v${store.state.serverConfiguration?.version}`"
 							target="_blank"
 							rel="noopener"
 							>Zobacz informacje o wydaniu tej wersji na GitHub</a

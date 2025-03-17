@@ -18,7 +18,7 @@ export function input(args: string[]): boolean {
 		})
 		.catch((e: Error) => {
 			// eslint-disable-next-line no-console
-			console.error(`Failed to push SearchResults route: ${e.message}`);
+			console.error(`Nie udało się przełączyć do wyników wyszukiwania: ${e.message}`);
 		});
 
 	return true;

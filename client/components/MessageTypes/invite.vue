@@ -1,10 +1,10 @@
 <template>
 	<span class="content">
 		<Username :user="message.from" />
-		invited
-		<span v-if="message.invitedYou">you</span>
+		zaprosił
+		<span v-if="message.invitedYou">Ciebie</span>
 		<Username v-else :user="message.target" />
-		to <ParsedMessage :network="network" :text="message.channel" />
+		do <ParsedMessage :network="network" :text="message.channel" />
 	</span>
 </template>
 
