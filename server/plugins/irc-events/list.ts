@@ -31,8 +31,6 @@ export default <IrcEventHandler>function (irc, network) {
 		);
 
 		network.chanCache = [];
-
-		console.log("✅ allChannels zaktualizowane:", network.allChannels);
 	});
 
 	function updateListStatus(
