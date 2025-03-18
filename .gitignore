@@ -8,4 +8,4 @@ coverage/
 public/
 dist/
 docker/
-
+.DS_Store
