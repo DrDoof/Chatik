@@ -126,6 +126,9 @@ interface ServerToClientEvents {
 		target: string;
 		candidate: RTCIceCandidateInit;
 	}>;
+	"webrtc:broadcasters-list": EventHandler<{broadcasters: string[]}>;
+	"webrtc:offer-request": EventHandler<{sender: string}>;
+	"webrtc:request-failed": EventHandler<{reason: string}>;
 }
 
 type AuthPerformData =
@@ -214,6 +217,8 @@ interface ClientToServerEvents {
 		target: string;
 		candidate: RTCIceCandidateInit;
 	}>;
+	"webrtc:get-broadcasters": NoPayloadEventHandler;
+	"webrtc:request-stream": EventHandler<{sender: string; target: string}>;
 }
 
 interface InterServerEvents {}

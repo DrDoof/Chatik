@@ -1,151 +1,274 @@
 <template>
-	<div class="webrtc-camera">
-		<h2>Podgląd kamery</h2>
-		<video ref="localVideo" autoplay playsinline></video>
-		<video ref="remoteVideo" autoplay playsinline></video>
+	<div class="webrtc-container">
+		<div class="video-container">
+			<h2>Podgląd kamery</h2>
+			<video ref="localVideo" autoplay playsinline></video>
+			<video ref="remoteVideo" autoplay playsinline></video>
 
-		<div class="controls">
-			<button @click="startCamera">Włącz kamerę</button>
-			<button @click="stopCamera">Wyłącz kamerę</button>
-			<button @click="startCall">Rozpocznij połączenie</button>
-			<button @click="endCall">Zakończ połączenie</button>
+			<div class="controls">
+				<button @click="startCamera">Włącz nadawanie</button>
+				<button @click="stopCamera">Wyłącz nadawanie</button>
+				<button @click="getBroadcasters">Pobierz nadawców</button>
+			</div>
+		</div>
+
+		<div class="broadcasters-list">
+			<h3>Lista nadających użytkowników</h3>
+			<ul>
+				<li v-for="user in broadcasters" :key="user" @click="connectToStream(user)">
+					{{ user }}
+				</li>
+			</ul>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, onUnmounted} from "vue";
+import {defineComponent, ref, onMounted, onUnmounted} from "vue";
+import socket from "../../js/socket"; // Teraz socket jest importowany bezpośrednio
+import {store} from "../../js/store";
 
 export default defineComponent({
 	name: "WebRtcCamera",
-	setup() {
+	props: {
+		network: Object, // Pobieranie network z props
+	},
+	setup(props) {
 		const localVideo = ref<HTMLVideoElement | null>(null);
 		const remoteVideo = ref<HTMLVideoElement | null>(null);
-		let localStream: MediaStream | null = null;
-		let peerConnection: RTCPeerConnection | null = null;
+		const broadcasters = ref<string[]>([]);
 
-		const signalingServer = new WebSocket("wss://chatik.pl/chat/");
+		const getBroadcasters = () => {
+			socket.emit("webrtc:get-broadcasters");
+
+			socket.on("webrtc:broadcasters-list", ({broadcasters: receivedBroadcasters}) => {
+				broadcasters.value = receivedBroadcasters;
+				console.log("Otrzymano listę nadających użytkowników:", broadcasters.value);
+			});
+		};
+
+		const connectToStream = (user: string) => {
+			console.log(`Łączenie z użytkownikiem: ${user}`);
+
+			store.peerConnection = new RTCPeerConnection({
+				iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+			});
+
+			store.peerConnection.onicecandidate = (event) => {
+				if (event.candidate) {
+					console.log("Wysyłanie kandydata ICE...");
+					socket.emit("webrtc:ice-candidate", {
+						sender: props.network.nick,
+						target: user,
+						candidate: event.candidate,
+					});
+				}
+			};
+
+			store.peerConnection.ontrack = (event) => {
+				if (remoteVideo.value) {
+					console.log("Odbieranie strumienia od użytkownika...");
+					remoteVideo.value.srcObject = event.streams[0];
+				}
+			};
+
+			socket.emit("webrtc:request-stream", {sender: props.network.nick, target: user});
+		};
+
+		const registerWebRTC = () => {
+			if (!props.network.nick) {
+				console.warn("Brak ID użytkownika. Nie można zarejestrować WebRTC.");
+				return;
+			}
+
+			socket.emit("webrtc:register", {username: props.network.nick});
+
+			socket.on("webrtc:registered", ({username}) => {
+				if (username === props.network.nick) {
+					console.log("Zarejestrowano WebRTC dla użytkownika:", username);
+				}
+			});
+		};
 
 		const startCamera = async () => {
 			try {
-				localStream = await navigator.mediaDevices.getUserMedia({
-					video: true,
-					audio: false,
-				});
-				if (localVideo.value) {
-					localVideo.value.srcObject = localStream;
+				if (!store.localStream) {
+					store.localStream = await navigator.mediaDevices.getUserMedia({
+						video: true,
+						audio: false,
+					});
 				}
+
+				if (localVideo.value) {
+					localVideo.value.srcObject = store.localStream;
+				}
+				registerWebRTC();
 			} catch (error) {
 				console.error("Błąd przy uruchamianiu kamery:", error);
 			}
 		};
 
 		const stopCamera = () => {
-			if (localStream) {
-				localStream.getTracks().forEach((track) => track.stop());
-				localStream = null;
+			if (store.localStream) {
+				store.localStream.getTracks().forEach((track) => track.stop());
+				store.localStream = null;
 			}
+
 			if (localVideo.value) {
 				localVideo.value.srcObject = null;
 			}
 		};
 
 		const startCall = async () => {
-			if (!localStream) {
+			console.log("Rozpoczynanie połączenia WebRTC...");
+
+			if (!store.localStream) {
 				console.warn("Najpierw włącz kamerę!");
 				return;
 			}
 
-			peerConnection = new RTCPeerConnection({
+			store.peerConnection = new RTCPeerConnection({
 				iceServers: [{urls: "stun:stun.l.google.com:19302"}],
 			});
+			console.log("RTCPeerConnection utworzone:", store.peerConnection);
 
-			localStream.getTracks().forEach((track) => {
-				peerConnection?.addTrack(track, localStream!);
+			store.localStream.getTracks().forEach((track) => {
+				store.peerConnection?.addTrack(track, store.localStream!);
 			});
 
-			peerConnection.onicecandidate = (event) => {
-				if (event.candidate) {
-					signalingServer.send(
-						JSON.stringify({type: "ice-candidate", candidate: event.candidate})
-					);
-				}
-			};
-
-			peerConnection.ontrack = (event) => {
+			store.peerConnection.ontrack = (event) => {
 				if (remoteVideo.value) {
 					remoteVideo.value.srcObject = event.streams[0];
 				}
 			};
-
-			const offer = await peerConnection.createOffer();
-			await peerConnection.setLocalDescription(offer);
-
-			signalingServer.send(JSON.stringify({type: "offer", offer}));
 		};
 
 		const endCall = () => {
-			if (peerConnection) {
-				peerConnection.close();
-				peerConnection = null;
+			if (store.peerConnection) {
+				store.peerConnection.close();
+				store.peerConnection = null;
 			}
+
 			if (remoteVideo.value) {
 				remoteVideo.value.srcObject = null;
 			}
 		};
 
-		signalingServer.onmessage = async (event) => {
-			const message = JSON.parse(event.data);
+		socket.on("webrtc:offer-request", async ({sender}) => {
+			console.log("Otrzymano prośbę o strumień od użytkownika:", sender);
 
-			if (message.type === "offer") {
-				if (!peerConnection) {
-					peerConnection = new RTCPeerConnection({
-						iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+			// Tworzenie nowego połączenia
+			store.peerConnection = new RTCPeerConnection({
+				iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+			});
+
+			// Obsługa kandydatów ICE
+			store.peerConnection.onicecandidate = (event) => {
+				if (event.candidate) {
+					socket.emit("webrtc:ice-candidate", {
+						sender: props.network.nick,
+						target: sender,
+						candidate: event.candidate,
 					});
-
-					peerConnection.onicecandidate = (event) => {
-						if (event.candidate) {
-							signalingServer.send(
-								JSON.stringify({type: "ice-candidate", candidate: event.candidate})
-							);
-						}
-					};
-
-					peerConnection.ontrack = (event) => {
-						if (remoteVideo.value) {
-							remoteVideo.value.srcObject = event.streams[0];
-						}
-					};
-
-					if (localStream) {
-						localStream
-							.getTracks()
-							.forEach((track) => peerConnection?.addTrack(track, localStream));
-					}
+					console.log("Wysłano ICE Candidate:", event.candidate);
 				}
+			};
 
-				await peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
-				const answer = await peerConnection.createAnswer();
-				await peerConnection.setLocalDescription(answer);
+			store.peerConnection.ontrack = (event) => {
+				if (remoteVideo.value) {
+					remoteVideo.value.srcObject = event.streams[0];
+				}
+			};
 
-				signalingServer.send(JSON.stringify({type: "answer", answer}));
+			// Dodanie strumienia lokalnego do połączenia
+			if (store.localStream) {
+				store.localStream.getTracks().forEach((track) => {
+					store.peerConnection?.addTrack(track, store.localStream!);
+				});
 			}
 
-			if (message.type === "answer" && peerConnection) {
-				await peerConnection.setRemoteDescription(
-					new RTCSessionDescription(message.answer)
-				);
+			// Tworzenie i wysyłanie oferty
+			const offer = await store.peerConnection.createOffer();
+			await store.peerConnection.setLocalDescription(offer);
+
+			socket.emit("webrtc:offer", {
+				sender: props.network.nick,
+				target: sender,
+				offer,
+			});
+
+			console.log("Wysłano ofertę WebRTC:", offer);
+		});
+
+		socket.on("webrtc:offer", async ({sender, target, offer}) => {
+			console.log(sender);
+			console.log(offer);
+			if (!store.peerConnection) {
+				store.peerConnection = new RTCPeerConnection({
+					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+				});
+
+				store.peerConnection.onicecandidate = (event) => {
+					if (event.candidate) {
+						socket.emit("webrtc:ice-candidate", {
+							sender: target,
+							target: sender,
+							candidate: event.candidate,
+						});
+					}
+				};
+
+				store.peerConnection.ontrack = (event) => {
+					if (remoteVideo.value) {
+						remoteVideo.value.srcObject = event.streams[0];
+					}
+				};
+
+				if (store.localStream) {
+					store.localStream
+						.getTracks()
+						.forEach((track) =>
+							store.peerConnection?.addTrack(track, store.localStream!)
+						);
+				}
 			}
 
-			if (message.type === "ice-candidate" && peerConnection) {
-				await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+			await store.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+			const answer = await store.peerConnection.createAnswer();
+			await store.peerConnection.setLocalDescription(answer);
+
+			socket.emit("webrtc:answer", {
+				sender: target,
+				target: sender,
+				answer,
+			});
+		});
+
+		socket.on("webrtc:answer", async ({sender, answer}) => {
+			if (store.peerConnection) {
+				await store.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 			}
-		};
+		});
+
+		socket.on("webrtc:ice-candidate", async ({sender, candidate}) => {
+			if (store.peerConnection) {
+				await store.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+			}
+		});
+
+		let broadcastersInterval: number | null = null;
+
+		onMounted(() => {
+			getBroadcasters();
+			broadcastersInterval = setInterval(getBroadcasters, 10000);
+		});
 
 		onUnmounted(() => {
-			stopCamera();
-			endCall();
-			signalingServer.close();
+			if (broadcastersInterval) {
+				clearInterval(broadcastersInterval);
+				broadcastersInterval = null;
+			}
+			endCall(); // Zatrzymujemy połączenie, ale nie kamerę
 		});
 
 		return {
@@ -155,12 +278,39 @@ export default defineComponent({
 			stopCamera,
 			startCall,
 			endCall,
+			getBroadcasters,
+			connectToStream,
+			broadcasters,
 		};
 	},
 });
 </script>
 
 <style scoped>
+.webrtc-container {
+	display: flex;
+	align-items: flex-start;
+}
+
+.video-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	align-self: center; /* Wyrównanie do środka */
+	width: 100%;
+}
+
+.broadcasters-list {
+	width: 300px;
+	margin-left: 10px; /* Zmniejszony odstęp od kamer */
+	padding: 10px;
+	background: #f8f9fa;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	text-align: center;
+}
+
 .webrtc-camera {
 	display: flex;
 	flex-direction: column;
@@ -169,7 +319,7 @@ export default defineComponent({
 }
 
 video {
-	width: 300px;
+	width: 400px;
 	height: 200px;
 	background: black;
 	border: 1px solid #ccc;
@@ -188,5 +338,20 @@ button {
 }
 button:hover {
 	background: #0056b3;
+}
+
+.broadcasters-list ul {
+	list-style: none;
+	padding: 0;
+}
+
+.broadcasters-list li {
+	padding: 5px 0;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+
+.broadcasters-list li:last-child {
+	border-bottom: none;
 }
 </style>

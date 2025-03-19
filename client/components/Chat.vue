@@ -77,7 +77,7 @@
 					</span>
 				</div>
 				<div v-if="showWebRTC" class="webrtc-overlay">
-					<WebRtcCamera />
+					<WebRtcCamera :network="network" />
 					<button @click="toggleWebRTC" class="close-webrtc">❌</button>
 				</div>
 				<div v-if="channel.type === 'special'" class="chat-content">
@@ -178,8 +178,8 @@
 	top: 10%;
 	left: 50%;
 	transform: translateX(-50%);
-	width: 400px;
-	height: 300px;
+	width: 800px;
+	height: 550px;
 	background: rgba(0, 0, 0, 0.9);
 	display: flex;
 	align-items: center;

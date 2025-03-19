@@ -63,6 +63,7 @@ export type Server = ioServer<
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
 const userSockets = new Map<string, string>(); // Mapowanie user -> socketId
+const userIceCandidates = new Map<string, any[]>(); // Przechowywanie publicznych ICE candidates
 
 let manager: ClientManager | null = null;
 
@@ -232,11 +233,6 @@ export default async function (
 		sockets.on("connect", (socket) => {
 			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
-
-			socket.on("webrtc:register", (data) => {
-				userSockets.set(data.username, socket.id);
-				console.log(`Użytkownik ${data.username} zarejestrowany pod socketem ${socket.id}`);
-			});
 
 			if (Config.values.public) {
 				performAuthentication.call(socket, {});
@@ -489,6 +485,51 @@ function initializeClient(
 		console.log(`Użytkownik ${data.username} zarejestrowany pod socketem ${socket.id}`);
 	});
 
+	socket.on("webrtc:get-broadcasters", () => {
+		const broadcasters = Array.from(userSockets.keys());
+		socket.emit("webrtc:broadcasters-list", {broadcasters});
+		console.log(`Wysłano listę nadawców: ${broadcasters.join(", ")}`);
+	});
+
+	socket.on("webrtc:request-stream", ({sender, target}) => {
+		console.log(`Użytkownik ${sender} prosi o stream od ${target}`);
+
+		if (userSockets.has(target)) {
+			const targetSocketId = userSockets.get(target)!;
+			console.log(
+				`Sprawdzanie obecności użytkownika ${target} w userSockets:`,
+				userSockets.has(target)
+			);
+			console.log(`Sprawdzanie targetSocketId:`, targetSocketId);
+			console.log(`Czy targetSocketId istnieje w userSockets?`, userSockets.has(target));
+			console.log(
+				`Czy socket istnieje w io.sockets.sockets?`,
+				io.sockets.sockets.has(targetSocketId)
+			);
+
+			// Jeśli mamy zapisane ICE candidates, wysyłamy je od razu do widza
+			if (userIceCandidates.has(target)) {
+				userIceCandidates.get(target)!.forEach((candidate) => {
+					socket.emit("webrtc:ice-candidate", {
+						sender: target,
+						target: sender,
+						candidate,
+					});
+					console.log(
+						`Wysłano wcześniej zapisany ICE Candidate od ${target} do ${sender}`
+					);
+				});
+			}
+
+			// Następnie wysyłamy prośbę o stream do nadawcy
+			socket.to(targetSocketId).emit("webrtc:offer-request", {sender});
+			console.log(`Przekazano prośbę o stream od ${sender} do ${target} : ${targetSocketId}`);
+		} else {
+			console.log(`Nie znaleziono nadawcy ${target}, żądanie odrzucone.`);
+			socket.emit("webrtc:request-failed", {reason: "Nadawca niedostępny"});
+		}
+	});
+
 	socket.on("webrtc:offer", (data) => {
 		console.log(`Otrzymano publiczną ofertę WebRTC od ${socket.id}`);
 		socket.emit("webrtc:offer", {sender: socket.id, target: data.target, offer: data.offer});
@@ -506,6 +547,24 @@ function initializeClient(
 
 	socket.on("webrtc:ice-candidate", (data) => {
 		console.log(`Otrzymano publiczny ICE Candidate od ${socket.id}`);
+		// Znajdź nazwę użytkownika przypisaną do tego socketu
+		let username: string | null = null;
+
+		for (const [user, sockId] of userSockets.entries()) {
+			if (sockId === socket.id) {
+				username = user;
+				break;
+			}
+		}
+
+		if (username) {
+			if (!userIceCandidates.has(username)) {
+				userIceCandidates.set(username, []);
+			}
+
+			userIceCandidates.get(username)!.push(data.candidate);
+		}
+
 		socket.emit("webrtc:ice-candidate", {
 			sender: socket.id,
 			target: data.target,
