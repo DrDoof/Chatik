@@ -110,6 +110,22 @@ interface ServerToClientEvents {
 		network: string;
 		chan: SharedNetworkChan;
 	}>;
+
+	"webrtc:offer": EventHandler<{
+		sender: string;
+		target: string;
+		offer: RTCSessionDescriptionInit;
+	}>;
+	"webrtc:answer": EventHandler<{
+		sender: string;
+		target: string;
+		answer: RTCSessionDescriptionInit;
+	}>;
+	"webrtc:ice-candidate": EventHandler<{
+		sender: string;
+		target: string;
+		candidate: RTCIceCandidateInit;
+	}>;
 }
 
 type AuthPerformData =
@@ -185,6 +201,19 @@ interface ClientToServerEvents {
 	"history:clear": EventHandler<{target: number}>;
 
 	search: EventHandler<SearchQuery>;
+
+	"webrtc:register": EventHandler<{username: string}>;
+	"webrtc:offer": EventHandler<{target: string; offer: RTCSessionDescriptionInit}>;
+	"webrtc:answer": EventHandler<{
+		sender: string;
+		target: string;
+		answer: RTCSessionDescriptionInit;
+	}>;
+	"webrtc:ice-candidate": EventHandler<{
+		sender: string;
+		target: string;
+		candidate: RTCIceCandidateInit;
+	}>;
 }
 
 interface InterServerEvents {}

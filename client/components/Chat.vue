@@ -45,6 +45,7 @@
 							:network="network"
 							:text="channel.topic"
 					/></span>
+					<button @click="toggleWebRTC" class="webrtc-toggle">📹</button>
 					<MessageSearchForm
 						v-if="
 							store.state.settings.searchEnabled &&
@@ -74,6 +75,10 @@
 							@click="store.commit('toggleUserlist')"
 						/>
 					</span>
+				</div>
+				<div v-if="showWebRTC" class="webrtc-overlay">
+					<WebRtcCamera />
+					<button @click="toggleWebRTC" class="close-webrtc">❌</button>
 				</div>
 				<div v-if="channel.type === 'special'" class="chat-content">
 					<div class="chat">
@@ -157,6 +162,44 @@
 .channellist[style*="display: none"] ~ .userlist {
 	max-height: 100%;
 }
+
+.webrtc-toggle {
+	margin-left: 10px;
+	padding: 5px;
+	cursor: pointer;
+	background: #007bff;
+	color: white;
+	border: none;
+	border-radius: 3px;
+}
+
+.webrtc-overlay {
+	position: fixed;
+	top: 10%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 400px;
+	height: 300px;
+	background: rgba(0, 0, 0, 0.9);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+	border-radius: 5px;
+	padding: 10px;
+}
+
+.close-webrtc {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	background: red;
+	color: white;
+	border: none;
+	cursor: pointer;
+	padding: 5px;
+	border-radius: 3px;
+}
 </style>
 <script lang="ts">
 import socket from "../js/socket";
@@ -173,6 +216,7 @@ import ListInvites from "./Special/ListInvites.vue";
 import ListChannels from "./Special/ListChannels.vue";
 import ListIgnored from "./Special/ListIgnored.vue";
 import {defineComponent, PropType, ref, computed, watch, nextTick, onMounted, Component} from "vue";
+import WebRtcCamera from "./Windows/WebRtcCamera.vue";
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
 import {SpecialChanType, ChanType} from "../../shared/types/chan";
@@ -187,6 +231,7 @@ export default defineComponent({
 		ChannelsList,
 		SidebarToggle,
 		MessageSearchForm,
+		WebRtcCamera,
 	},
 	props: {
 		network: {type: Object as PropType<ClientNetwork>, required: true},
@@ -198,7 +243,12 @@ export default defineComponent({
 		const store = useStore();
 
 		const messageList = ref<typeof MessageList>();
+		const showWebRTC = ref(false);
 		const topicInput = ref<HTMLInputElement | null>(null);
+
+		const toggleWebRTC = () => {
+			showWebRTC.value = !showWebRTC.value;
+		};
 
 		const specialComponent = computed(() => {
 			switch (props.channel.special) {
@@ -303,6 +353,8 @@ export default defineComponent({
 			messageList,
 			topicInput,
 			specialComponent,
+			showWebRTC,
+			toggleWebRTC,
 			hideUserVisibleError,
 			editTopic,
 			saveTopic,

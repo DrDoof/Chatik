@@ -62,6 +62,7 @@ export type Server = ioServer<
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
+const userSockets = new Map<string, string>(); // Mapowanie user -> socketId
 
 let manager: ClientManager | null = null;
 
@@ -231,6 +232,11 @@ export default async function (
 		sockets.on("connect", (socket) => {
 			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
+
+			socket.on("webrtc:register", (data) => {
+				userSockets.set(data.username, socket.id);
+				console.log(`Użytkownik ${data.username} zarejestrowany pod socketem ${socket.id}`);
+			});
 
 			if (Config.values.public) {
 				performAuthentication.call(socket, {});
@@ -452,6 +458,14 @@ function initializeClient(
 
 	socket.on("disconnect", function () {
 		process.nextTick(() => client.clientDetach(socket.id));
+
+		for (const [user, id] of userSockets.entries()) {
+			if (id === socket.id) {
+				userSockets.delete(user);
+				console.log(`Użytkownik ${user} rozłączony`);
+				break;
+			}
+		}
 	});
 
 	socket.on("input", (data) => {
@@ -468,6 +482,35 @@ function initializeClient(
 				socket.emit("more", history);
 			}
 		}
+	});
+
+	socket.on("webrtc:register", (data) => {
+		userSockets.set(data.username, socket.id);
+		console.log(`Użytkownik ${data.username} zarejestrowany pod socketem ${socket.id}`);
+	});
+
+	socket.on("webrtc:offer", (data) => {
+		console.log(`Otrzymano publiczną ofertę WebRTC od ${socket.id}`);
+		socket.emit("webrtc:offer", {sender: socket.id, target: data.target, offer: data.offer});
+	});
+
+	socket.on("webrtc:answer", (data) => {
+		if (userSockets.has(data.target)) {
+			socket.to(userSockets.get(data.target)!).emit("webrtc:answer", {
+				sender: socket.id,
+				target: data.target,
+				answer: data.answer,
+			});
+		}
+	});
+
+	socket.on("webrtc:ice-candidate", (data) => {
+		console.log(`Otrzymano publiczny ICE Candidate od ${socket.id}`);
+		socket.emit("webrtc:ice-candidate", {
+			sender: socket.id,
+			target: data.target,
+			candidate: data.candidate,
+		});
 	});
 
 	socket.on("network:new", (data) => {
