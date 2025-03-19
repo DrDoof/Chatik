@@ -52,6 +52,10 @@ export default <IrcEventHandler>function (irc, network) {
 			});
 		}
 
+		if (network.password) {
+			irc.raw("PRIVMSG NickServ :IDENTIFY " + network.password);
+		}
+
 		network.channels.forEach((chan) => {
 			if (chan.type !== ChanType.CHANNEL) {
 				return;

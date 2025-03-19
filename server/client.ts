@@ -340,7 +340,6 @@ class Client {
 
 		// Get channel id for lobby before creating other channels for nicer ids
 		const lobbyChannelId = client.idChan++;
-
 		const network = this.networkFromConfig(args);
 
 		// Set network lobby channel id
