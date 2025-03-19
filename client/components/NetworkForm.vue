@@ -441,6 +441,7 @@ import SidebarToggle from "./SidebarToggle.vue";
 import {defineComponent, nextTick, PropType, ref, watch} from "vue";
 import {useStore} from "../js/store";
 import {ClientNetwork} from "../js/types";
+import localStorage from "../js/localStorage";
 
 export type NetworkFormDefaults = Partial<ClientNetwork> & {
 	join?: string;
@@ -467,8 +468,23 @@ export default defineComponent({
 		const store = useStore();
 		const config = ref(store.state.serverConfiguration);
 		const previousUsername = ref(props.defaults?.username);
-		const displayPasswordField = ref(false);
 
+		const savedDefaults = localStorage.get("savedDefaults");
+
+		if (savedDefaults) {
+			try {
+				const parsedDefaults = JSON.parse(savedDefaults);
+				Object.keys(parsedDefaults).forEach((key) => {
+					if (key !== "password" && key !== "saslPassword") {
+						props.defaults[key] = parsedDefaults[key];
+					}
+				});
+			} catch (e) {
+				console.error("Błąd odczytu savedDefaults:", e);
+			}
+		}
+
+		const displayPasswordField = ref(false);
 		const publicPassword = ref<HTMLInputElement | null>(null);
 
 		watch(displayPasswordField, (newValue) => {
@@ -549,6 +565,11 @@ export default defineComponent({
 			formData.forEach((value, key) => {
 				data[key] = value;
 			});
+
+			const filteredData = {...data};
+			delete filteredData.password;
+			delete filteredData.saslPassword;
+			localStorage.set("savedDefaults", JSON.stringify(filteredData));
 
 			props.handleSubmit(data as ClientNetwork);
 		};
