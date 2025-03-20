@@ -50,11 +50,14 @@ export default defineComponent({
 		const connectToStream = (user: string) => {
 			console.log(`Łączenie z użytkownikiem: ${user}`);
 
-			store.peerConnection = new RTCPeerConnection({
-				iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-			});
+			store.commit(
+				"peerConnection",
+				new RTCPeerConnection({
+					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+				})
+			);
 
-			store.peerConnection.onicecandidate = (event) => {
+			store.state.peerConnection.onicecandidate = (event) => {
 				if (event.candidate) {
 					console.log("Wysyłanie kandydata ICE...");
 					socket.emit("webrtc:ice-candidate", {
@@ -65,7 +68,7 @@ export default defineComponent({
 				}
 			};
 
-			store.peerConnection.ontrack = (event) => {
+			store.state.peerConnection.ontrack = (event) => {
 				if (remoteVideo.value) {
 					console.log("Odbieranie strumienia od użytkownika...");
 					remoteVideo.value.srcObject = event.streams[0];
@@ -127,16 +130,19 @@ export default defineComponent({
 				return;
 			}
 
-			store.peerConnection = new RTCPeerConnection({
-				iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-			});
-			console.log("RTCPeerConnection utworzone:", store.peerConnection);
+			store.commit(
+				"peerConnection",
+				new RTCPeerConnection({
+					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+				})
+			);
+			console.log("RTCPeerConnection utworzone:", store.state.peerConnection);
 
 			store.localStream.getTracks().forEach((track) => {
-				store.peerConnection?.addTrack(track, store.localStream!);
+				store.state.peerConnection?.addTrack(track, store.localStream!);
 			});
 
-			store.peerConnection.ontrack = (event) => {
+			store.state.peerConnection.ontrack = (event) => {
 				if (remoteVideo.value) {
 					remoteVideo.value.srcObject = event.streams[0];
 				}
@@ -144,9 +150,9 @@ export default defineComponent({
 		};
 
 		const endCall = () => {
-			if (store.peerConnection) {
-				store.peerConnection.close();
-				store.peerConnection = null;
+			if (store.state.peerConnection) {
+				store.state.peerConnection.close();
+				store.commit("peerConnection", null);
 			}
 
 			if (remoteVideo.value) {
@@ -158,12 +164,15 @@ export default defineComponent({
 			console.log("Otrzymano prośbę o strumień od użytkownika:", sender);
 
 			// Tworzenie nowego połączenia
-			store.peerConnection = new RTCPeerConnection({
-				iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-			});
+			store.commit(
+				"peerConnection",
+				new RTCPeerConnection({
+					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+				})
+			);
 
 			// Obsługa kandydatów ICE
-			store.peerConnection.onicecandidate = (event) => {
+			store.state.peerConnection.onicecandidate = (event) => {
 				if (event.candidate) {
 					socket.emit("webrtc:ice-candidate", {
 						sender: props.network.nick,
@@ -174,7 +183,7 @@ export default defineComponent({
 				}
 			};
 
-			store.peerConnection.ontrack = (event) => {
+			store.state.peerConnection.ontrack = (event) => {
 				if (remoteVideo.value) {
 					remoteVideo.value.srcObject = event.streams[0];
 				}
@@ -183,13 +192,13 @@ export default defineComponent({
 			// Dodanie strumienia lokalnego do połączenia
 			if (store.localStream) {
 				store.localStream.getTracks().forEach((track) => {
-					store.peerConnection?.addTrack(track, store.localStream!);
+					store.state.peerConnection?.addTrack(track, store.localStream!);
 				});
 			}
 
 			// Tworzenie i wysyłanie oferty
-			const offer = await store.peerConnection.createOffer();
-			await store.peerConnection.setLocalDescription(offer);
+			const offer = await store.state.peerConnection.createOffer();
+			await store.state.peerConnection.setLocalDescription(offer);
 
 			socket.emit("webrtc:offer", {
 				sender: props.network.nick,
@@ -203,12 +212,15 @@ export default defineComponent({
 		socket.on("webrtc:offer", async ({sender, target, offer}) => {
 			console.log(sender);
 			console.log(offer);
-			if (!store.peerConnection) {
-				store.peerConnection = new RTCPeerConnection({
-					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-				});
+			if (!store.state.peerConnection) {
+				store.commit(
+					"peerConnection",
+					new RTCPeerConnection({
+						iceServers: [{urls: "stun:stun.l.google.com:19302"}],
+					})
+				);
 
-				store.peerConnection.onicecandidate = (event) => {
+				store.state.peerConnection.onicecandidate = (event) => {
 					if (event.candidate) {
 						socket.emit("webrtc:ice-candidate", {
 							sender: target,
@@ -218,7 +230,7 @@ export default defineComponent({
 					}
 				};
 
-				store.peerConnection.ontrack = (event) => {
+				store.state.peerConnection.ontrack = (event) => {
 					if (remoteVideo.value) {
 						remoteVideo.value.srcObject = event.streams[0];
 					}
@@ -228,14 +240,14 @@ export default defineComponent({
 					store.localStream
 						.getTracks()
 						.forEach((track) =>
-							store.peerConnection?.addTrack(track, store.localStream!)
+							store.state.peerConnection?.addTrack(track, store.localStream!)
 						);
 				}
 			}
 
-			await store.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-			const answer = await store.peerConnection.createAnswer();
-			await store.peerConnection.setLocalDescription(answer);
+			await store.state.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+			const answer = await store.state.peerConnection.createAnswer();
+			await store.state.peerConnection.setLocalDescription(answer);
 
 			socket.emit("webrtc:answer", {
 				sender: target,
@@ -245,14 +257,16 @@ export default defineComponent({
 		});
 
 		socket.on("webrtc:answer", async ({sender, answer}) => {
-			if (store.peerConnection) {
-				await store.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+			if (store.state.peerConnection) {
+				await store.state.peerConnection.setRemoteDescription(
+					new RTCSessionDescription(answer)
+				);
 			}
 		});
 
 		socket.on("webrtc:ice-candidate", async ({sender, candidate}) => {
-			if (store.peerConnection) {
-				await store.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+			if (store.state.peerConnection) {
+				await store.state.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
 			}
 		});
 

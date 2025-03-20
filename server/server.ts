@@ -502,10 +502,6 @@ function initializeClient(
 			);
 			console.log(`Sprawdzanie targetSocketId:`, targetSocketId);
 			console.log(`Czy targetSocketId istnieje w userSockets?`, userSockets.has(target));
-			console.log(
-				`Czy socket istnieje w io.sockets.sockets?`,
-				io.sockets.sockets.has(targetSocketId)
-			);
 
 			// Jeśli mamy zapisane ICE candidates, wysyłamy je od razu do widza
 			if (userIceCandidates.has(target)) {
@@ -522,7 +518,6 @@ function initializeClient(
 			}
 
 			// Następnie wysyłamy prośbę o stream do nadawcy
-			socket.to(targetSocketId).emit("webrtc:offer-request", {sender});
 			console.log(`Przekazano prośbę o stream od ${sender} do ${target} : ${targetSocketId}`);
 		} else {
 			console.log(`Nie znaleziono nadawcy ${target}, żądanie odrzucone.`);

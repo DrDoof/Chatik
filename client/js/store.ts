@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-
 import {ActionContext, createStore, Store, useStore as baseUseStore} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
@@ -50,6 +48,9 @@ export type State = {
 	isAutoCompleting: boolean;
 	isConnected: boolean;
 	networks: ClientNetwork[];
+	peerConnection: RTCPeerConnection | null;
+	localStream: MediaStream | null; // Dodano localStream
+	remoteVideo: HTMLVideoElement | null; // Dodano remoteVideo
 	// TODO: type
 	mentions: ClientMention[];
 	hasServiceWorker: boolean;
@@ -109,6 +110,9 @@ const state = (): State => ({
 	messageSearchResults: null,
 	messageSearchPendingQuery: null,
 	searchEnabled: false,
+	peerConnection: null,
+	localStream: null, // Inicjalizacja localStream
+	remoteVideo: null, // Inicjalizacja remoteVideo
 });
 
 type Getters = {
@@ -236,6 +240,9 @@ type Mutations = {
 	messageSearchPendingQuery(state: State, value: State["messageSearchPendingQuery"]): void;
 	messageSearchResults(state: State, value: State["messageSearchResults"]): void;
 	addMessageSearchResults(state: State, value: NonNullable<State["messageSearchResults"]>): void;
+	localStream(state: State, payload: MediaStream | null): void; // Dodano mutację dla localStream
+	remoteVideo(state: State, payload: HTMLVideoElement | null): void; // Dodano mutację dla remoteVideo
+	peerConnection(state: State, payload: RTCPeerConnection | null): void;
 };
 
 const mutations: Mutations = {
@@ -265,6 +272,17 @@ const mutations: Mutations = {
 	},
 	mentions(state, mentions) {
 		state.mentions = mentions;
+	},
+	localStream(state, payload) {
+		// Implementacja mutacji dla localStream
+		state.localStream = payload;
+	},
+	remoteVideo(state, payload) {
+		// Implementacja mutacji dla remoteVideo
+		state.remoteVideo = payload;
+	},
+	peerConnection(state, payload: RTCPeerConnection | null) {
+		state.peerConnection = payload;
 	},
 	removeNetwork(state, networkId) {
 		state.networks.splice(
@@ -390,6 +408,8 @@ export type TypedStore = Omit<Store<State>, "getters" | "commit"> & {
 	commit: TypedCommit;
 	state: State & {
 		settings: SettingsState;
+		localStream: MediaStream | null; // Poprawiony dostęp do localStream
+		remoteVideo: HTMLVideoElement | null; // Poprawiony dostęp do remoteVideo
 	};
 };
 
