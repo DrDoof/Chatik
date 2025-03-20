@@ -518,6 +518,8 @@ function initializeClient(
 			}
 
 			// Następnie wysyłamy prośbę o stream do nadawcy
+			//console.log(socket);
+			socket.to(targetSocketId).emit("webrtc:offer-request", {sender});
 			console.log(`Przekazano prośbę o stream od ${sender} do ${target} : ${targetSocketId}`);
 		} else {
 			console.log(`Nie znaleziono nadawcy ${target}, żądanie odrzucone.`);
@@ -526,8 +528,19 @@ function initializeClient(
 	});
 
 	socket.on("webrtc:offer", (data) => {
-		console.log(`Otrzymano publiczną ofertę WebRTC od ${socket.id}`);
-		socket.emit("webrtc:offer", {sender: socket.id, target: data.target, offer: data.offer});
+		console.log(`Otrzymano ofertę WebRTC od ${socket.id} dla ${data.target}`);
+
+		if (userSockets.has(data.target)) {
+			const targetSocketId = userSockets.get(data.target)!;
+			socket.to(targetSocketId).emit("webrtc:offer", {
+				sender: socket.id,
+				target: data.target,
+				offer: data.offer,
+			});
+			console.log(`Wysłano ofertę WebRTC od ${socket.id} do ${data.target}`);
+		} else {
+			console.log(`Nie znaleziono użytkownika ${data.target}, oferta WebRTC odrzucona.`);
+		}
 	});
 
 	socket.on("webrtc:answer", (data) => {
