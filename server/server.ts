@@ -518,7 +518,9 @@ function initializeClient(
 			}
 
 			// Następnie wysyłamy prośbę o stream do nadawcy
-			//console.log(socket);
+			const allSockets = Array.from(sockets.sockets.sockets.keys());
+			console.log("Wszystkie podłączone sockety:", allSockets);
+
 			socket.to(targetSocketId).emit("webrtc:offer-request", {sender});
 			console.log(`Przekazano prośbę o stream od ${sender} do ${target} : ${targetSocketId}`);
 		} else {
