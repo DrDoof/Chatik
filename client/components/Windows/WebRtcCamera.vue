@@ -105,7 +105,6 @@ export default defineComponent({
 				if (localVideo.value) {
 					localVideo.value.srcObject = store.localStream;
 				}
-				registerWebRTC();
 			} catch (error) {
 				console.error("Błąd przy uruchamianiu kamery:", error);
 			}
@@ -273,6 +272,7 @@ export default defineComponent({
 		let broadcastersInterval: number | null = null;
 
 		onMounted(() => {
+			registerWebRTC();
 			getBroadcasters();
 			broadcastersInterval = setInterval(getBroadcasters, 10000);
 		});

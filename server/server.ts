@@ -230,6 +230,11 @@ export default async function (
 			pingTimeout: 60000,
 		});
 
+		setInterval(() => {
+			const socketIds = Array.from(sockets.of("/").sockets.keys());
+			console.log(`Aktywne sockety (${socketIds.length}):`, socketIds);
+		}, 20_000);
+
 		sockets.on("connect", (socket) => {
 			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
@@ -518,9 +523,6 @@ function initializeClient(
 			}
 
 			// Następnie wysyłamy prośbę o stream do nadawcy
-			const allSockets = Array.from(sockets.sockets.sockets.keys());
-			console.log("Wszystkie podłączone sockety:", allSockets);
-
 			socket.to(targetSocketId).emit("webrtc:offer-request", {sender});
 			console.log(`Przekazano prośbę o stream od ${sender} do ${target} : ${targetSocketId}`);
 		} else {
