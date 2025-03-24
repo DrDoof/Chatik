@@ -1,37 +1,40 @@
 <template>
-	<div class="webrtc-container">
-		<div class="video-container">
-			<h2>Podgląd kamery</h2>
-			<video ref="localVideo" autoplay playsinline></video>
-			<video ref="remoteVideo" autoplay playsinline></video>
+	<div id="webrtc-container" class="webrtc-container">
+		<div class="webrtc-content">
+			<div class="video-container">
+				<h2>Podgląd kamery</h2>
+				<video ref="localVideo" autoplay playsinline></video>
+				<video ref="remoteVideo" autoplay playsinline></video>
 
-			<div class="controls">
-				<button @click="startCamera">Włącz nadawanie</button>
-				<button @click="stopCamera">Wyłącz nadawanie</button>
-				<button @click="getBroadcasters">Pobierz nadawców</button>
+				<div class="controls">
+					<button @click="startCamera">Włącz nadawanie</button>
+					<button @click="stopCamera">Wyłącz nadawanie</button>
+					<button @click="getBroadcasters">Pobierz nadawców</button>
+				</div>
+			</div>
+
+			<div class="sidebar-lists">
+				<div class="broadcasters-list">
+					<h3>Lista nadających użytkowników</h3>
+					<ul>
+						<li v-for="user in broadcasters" :key="user" @click="connectToStream(user)">
+							{{ user }}
+						</li>
+					</ul>
+				</div>
+				<div class="viewers-list">
+					<h3>Lista oglądających użytkowników</h3>
+					<ul>
+						<li v-for="viewer in viewers" :key="viewer">
+							{{ viewer }}
+						</li>
+					</ul>
+				</div>
 				<div class="connection-info">
 					<p>ICE state: {{ iceState }}</p>
 					<p>PeerConnection state: {{ connectionState }}</p>
+					<p>ICE Gathering state: {{ gatheringState }}</p>
 				</div>
-			</div>
-		</div>
-
-		<div class="sidebar-lists">
-			<div class="broadcasters-list">
-				<h3>Lista nadających użytkowników</h3>
-				<ul>
-					<li v-for="user in broadcasters" :key="user" @click="connectToStream(user)">
-						{{ user }}
-					</li>
-				</ul>
-			</div>
-			<div class="viewers-list">
-				<h3>Lista oglądających użytkowników</h3>
-				<ul>
-					<li v-for="viewer in viewers" :key="viewer">
-						{{ viewer }}
-					</li>
-				</ul>
 			</div>
 		</div>
 	</div>
@@ -48,6 +51,7 @@ export default defineComponent({
 		network: Object, // Pobieranie network z props
 	},
 	setup(props) {
+		const isMinimized = ref(false);
 		let broadcastersInterval: NodeJS.Timeout | null = null;
 		let rtcConfig = {
 			iceServers: [],
@@ -61,6 +65,7 @@ export default defineComponent({
 		let isRemoteDescriptionSet = false;
 		const iceState = ref("");
 		const connectionState = ref("");
+		const gatheringState = ref("");
 
 		const getBroadcasters = () => {
 			socket.emit("webrtc:get-broadcasters");
@@ -550,6 +555,7 @@ export default defineComponent({
 			const rtc =
 				store.state.incomingPeerConnections[sender] ||
 				store.state.outgoingPeerConnections[sender];
+
 			if (rtc) {
 				if (isRemoteDescriptionSet) {
 					try {
@@ -594,6 +600,12 @@ export default defineComponent({
 						console.log(`🧊 [${target}] ICE state:`, pc.iceConnectionState);
 						iceState.value = pc.iceConnectionState;
 					};
+
+					pc.onicegatheringstatechange = () => {
+						console.log(`📡 [${target}] ICE gathering state:`, pc.iceGatheringState);
+						gatheringState.value = pc.iceGatheringState;
+					};
+
 					pc.onconnectionstatechange = () => {
 						console.log(`🔗 [${target}] Connection state:`, pc.connectionState);
 						connectionState.value = pc.connectionState;
@@ -632,25 +644,28 @@ export default defineComponent({
 			viewers,
 			iceState,
 			connectionState,
+			gatheringState,
+			isMinimized,
 		};
 	},
 });
 </script>
 
 <style scoped>
-.webrtc-container {
-	display: flex;
-	align-items: flex-start;
+#webrtc-container {
+	width: 100%;
+	height: 100%;
 }
 
-.viewers-list {
-	width: 300px;
-	margin-left: 10px;
-	padding: 10px;
-	background: #f1f3f5;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	text-align: center;
+.webrtc-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+}
+
+.webrtc-content {
+	display: flex;
 }
 
 .video-container {
@@ -658,25 +673,8 @@ export default defineComponent({
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	align-self: center; /* Wyrównanie do środka */
+	align-self: center;
 	width: 100%;
-}
-
-.broadcasters-list {
-	width: 300px;
-	margin-left: 10px; /* Zmniejszony odstęp od kamer */
-	padding: 10px;
-	background: #f8f9fa;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	text-align: center;
-}
-
-.webrtc-camera {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 10px;
 }
 
 video {
@@ -684,12 +682,14 @@ video {
 	height: 200px;
 	background: black;
 	border: 1px solid #ccc;
+	object-fit: cover;
 }
 
 .controls {
 	display: flex;
 	gap: 10px;
 }
+
 button {
 	padding: 10px;
 	background: #007bff;
@@ -701,28 +701,48 @@ button:hover {
 	background: #0056b3;
 }
 
-.broadcasters-list ul {
-	list-style: none;
-	padding: 0;
-}
-
-.broadcasters-list li {
-	padding: 5px 0;
-	border-bottom: 1px solid #ddd;
+.close-button {
+	background: none;
+	border: none;
+	color: white;
+	font-size: 18px;
 	cursor: pointer;
 }
-
-.broadcasters-list li:last-child {
-	border-bottom: none;
-}
-
-.connection-info p {
-	color: white;
+.close-button:hover {
+	color: #ff6b6b;
 }
 
 .sidebar-lists {
 	display: flex;
 	flex-direction: column;
 	margin-left: 10px;
+}
+
+.broadcasters-list,
+.viewers-list {
+	width: 300px;
+	margin-left: 10px;
+	padding: 10px;
+	background: #f1f3f5;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	text-align: center;
+}
+
+.broadcasters-list ul {
+	list-style: none;
+	padding: 0;
+}
+.broadcasters-list li {
+	padding: 5px 0;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+.broadcasters-list li:last-child {
+	border-bottom: none;
+}
+
+.connection-info p {
+	color: white;
 }
 </style>

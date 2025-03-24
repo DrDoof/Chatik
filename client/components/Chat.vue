@@ -76,9 +76,12 @@
 						/>
 					</span>
 				</div>
-				<div v-if="showWebRTC" class="webrtc-overlay">
-					<WebRtcCamera :network="network" />
-					<button @click="toggleWebRTC" class="close-webrtc">❌</button>
+				<div v-if="showWebRTC" class="webrtc-overlay" ref="webrtcOverlay">
+					<div class="webrtc-overlay-header">
+						<span>WebRTC Kamera</span>
+						<button @click="toggleWebRTC" class="close-webrtc">❌</button>
+					</div>
+					<WebRtcCamera :network="network" class="window" />
 				</div>
 				<div v-if="channel.type === 'special'" class="chat-content">
 					<div class="chat">
@@ -175,18 +178,36 @@
 
 .webrtc-overlay {
 	position: fixed;
-	top: 10%;
-	left: 50%;
-	transform: translateX(-50%);
+	top: 100px;
+	left: 100px;
 	width: 800px;
 	height: 550px;
 	background: rgba(0, 0, 0, 0.9);
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	flex-direction: column;
 	z-index: 1000;
 	border-radius: 5px;
-	padding: 10px;
+	overflow: hidden;
+}
+
+.webrtc-overlay > .window {
+	flex: 1;
+	width: 100%;
+	height: 100%;
+	overflow: auto; /* pozwala na przewijanie, jeśli za dużo treści */
+	display: flex;
+	flex-direction: column;
+}
+
+.webrtc-overlay-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #2c3e50;
+	color: white;
+	font-weight: bold;
+	padding: 5px 10px;
+	border-bottom: 1px solid #ccc;
 }
 
 .close-webrtc {
@@ -245,6 +266,7 @@ export default defineComponent({
 		const messageList = ref<typeof MessageList>();
 		const showWebRTC = ref(false);
 		const topicInput = ref<HTMLInputElement | null>(null);
+		const webrtcOverlay = ref<HTMLElement | null>(null);
 
 		const toggleWebRTC = () => {
 			showWebRTC.value = !showWebRTC.value;
@@ -346,6 +368,40 @@ export default defineComponent({
 					topicInput.value?.focus();
 				});
 			}
+
+			if (webrtcOverlay.value) {
+				const el = webrtcOverlay.value;
+				const header = el.querySelector(".webrtc-overlay-header") as HTMLElement | null;
+
+				let isDragging = false;
+				let offsetX = 0;
+				let offsetY = 0;
+
+				if (header) {
+					header.style.cursor = "move";
+
+					header.addEventListener("mousedown", (e) => {
+						isDragging = true;
+						offsetX = e.clientX - el.offsetLeft;
+						offsetY = e.clientY - el.offsetTop;
+					});
+
+					document.addEventListener("mousemove", (e) => {
+						if (isDragging) {
+							el.style.left = `${e.clientX - offsetX}px`;
+							el.style.top = `${e.clientY - offsetY}px`;
+						}
+					});
+
+					document.addEventListener("mouseup", () => {
+						isDragging = false;
+					});
+				}
+
+				el.style.position = "fixed";
+				el.style.left = "100px";
+				el.style.top = "100px";
+			}
 		});
 
 		return {
@@ -360,6 +416,7 @@ export default defineComponent({
 			saveTopic,
 			openContextMenu,
 			openMentions,
+			webrtcOverlay,
 		};
 	},
 });

@@ -652,11 +652,20 @@ function initializeClient(
 			userIceCandidates.get(username)!.push(data.candidate);
 		}
 
-		socket.emit("webrtc:ice-candidate", {
-			sender: socket.id,
-			target: data.target,
-			candidate: data.candidate,
-		});
+		const targetSocketId = userSockets.get(data.target)?.socketId;
+
+		if (targetSocketId) {
+			socket.to(targetSocketId).emit("webrtc:ice-candidate", {
+				sender: username || socket.id,
+				target: data.target,
+				candidate: data.candidate,
+			});
+			console.log(
+				`Przesłano ICE Candidate od ${username} do ${data.target} [${targetSocketId}]`
+			);
+		} else {
+			console.warn(`Nie znaleziono targetu ${data.target} do przesłania ICE Candidate`);
+		}
 	});
 
 	socket.on("network:new", (data) => {
