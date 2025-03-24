@@ -129,6 +129,12 @@ interface ServerToClientEvents {
 	"webrtc:broadcasters-list": EventHandler<{broadcasters: string[]}>;
 	"webrtc:offer-request": EventHandler<{sender: string}>;
 	"webrtc:request-failed": EventHandler<{reason: string}>;
+	"webrtc:rtc-config": EventHandler<{
+		rtcConfig: {
+			iceServers: RTCIceServer[];
+			iceTransportPolicy: RTCIceTransportPolicy;
+		};
+	}>;
 }
 
 type AuthPerformData =

@@ -34,9 +34,26 @@ export default defineComponent({
 		network: Object, // Pobieranie network z props
 	},
 	setup(props) {
+		//const rtcConfig = {
+		//	iceServers: [
+		//		{urls: "stun:stun.l.google.com:19302"},
+		//		{
+		//			urls: "turn:openrelay.metered.ca:80",
+		//			username: "openrelayproject",
+		//			credential: "openrelayproject",
+		//		},
+		//	],
+		//};
+
+		let rtcConfig = {
+			iceServers: [],
+		};
+
 		const localVideo = ref<HTMLVideoElement | null>(null);
 		const remoteVideo = ref<HTMLVideoElement | null>(null);
+		let remoteDescriptionSet = false;
 		const broadcasters = ref<string[]>([]);
+		let isRemoteDescriptionSet = false;
 
 		const getBroadcasters = () => {
 			socket.emit("webrtc:get-broadcasters");
@@ -50,12 +67,7 @@ export default defineComponent({
 		const connectToStream = (user: string) => {
 			console.log(`Łączenie z użytkownikiem: ${user}`);
 
-			store.commit(
-				"peerConnection",
-				new RTCPeerConnection({
-					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-				})
-			);
+			store.commit("peerConnection", new RTCPeerConnection(rtcConfig));
 
 			store.state.peerConnection.onicecandidate = (event) => {
 				if (event.candidate) {
@@ -86,10 +98,9 @@ export default defineComponent({
 
 			socket.emit("webrtc:register", {username: props.network.nick});
 
-			socket.on("webrtc:registered", ({username}) => {
-				if (username === props.network.nick) {
-					console.log("Zarejestrowano WebRTC dla użytkownika:", username);
-				}
+			socket.on("webrtc:rtc-config", ({rtcConfig: receivedConfig}) => {
+				console.log("Otrzymano RTC config z serwera:", receivedConfig);
+				rtcConfig = receivedConfig;
 			});
 		};
 
@@ -129,13 +140,15 @@ export default defineComponent({
 				return;
 			}
 
-			store.commit(
-				"peerConnection",
-				new RTCPeerConnection({
-					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-				})
-			);
+			store.commit("peerConnection", new RTCPeerConnection(rtcConfig));
 			console.log("RTCPeerConnection utworzone:", store.state.peerConnection);
+			console.log(
+				"Tworzę RTCPeerConnection z configiem:",
+				JSON.stringify(rtcConfig, null, 2)
+			);
+			if (!rtcConfig.iceServers.length) {
+				console.warn("⚠️ rtcConfig.iceServers jest puste! Połączenie może się nie udać.");
+			}
 
 			store.localStream.getTracks().forEach((track) => {
 				store.state.peerConnection?.addTrack(track, store.localStream!);
@@ -163,12 +176,14 @@ export default defineComponent({
 			console.log("Otrzymano prośbę o strumień od użytkownika:", sender);
 
 			// Tworzenie nowego połączenia
-			store.commit(
-				"peerConnection",
-				new RTCPeerConnection({
-					iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-				})
+			store.commit("peerConnection", new RTCPeerConnection(rtcConfig));
+			console.log(
+				"Tworzę RTCPeerConnection z configiem:",
+				JSON.stringify(rtcConfig, null, 2)
 			);
+			if (!rtcConfig.iceServers.length) {
+				console.warn("⚠️ rtcConfig.iceServers jest puste! Połączenie może się nie udać.");
+			}
 
 			// Obsługa kandydatów ICE
 			store.state.peerConnection.onicecandidate = (event) => {
@@ -209,15 +224,10 @@ export default defineComponent({
 		});
 
 		socket.on("webrtc:offer", async ({sender, target, offer}) => {
-			console.log(sender);
-			console.log(offer);
+			console.log("Otrzymano oferte od: ", sender);
+
 			if (!store.state.peerConnection) {
-				store.commit(
-					"peerConnection",
-					new RTCPeerConnection({
-						iceServers: [{urls: "stun:stun.l.google.com:19302"}],
-					})
-				);
+				store.commit("peerConnection", new RTCPeerConnection(rtcConfig));
 
 				store.state.peerConnection.onicecandidate = (event) => {
 					if (event.candidate) {
@@ -230,6 +240,8 @@ export default defineComponent({
 				};
 
 				store.state.peerConnection.ontrack = (event) => {
+					console.log("📺 ontrack fired!", event.streams);
+
 					if (remoteVideo.value) {
 						remoteVideo.value.srcObject = event.streams[0];
 					}
@@ -244,15 +256,36 @@ export default defineComponent({
 				}
 			}
 
-			await store.state.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-			const answer = await store.state.peerConnection.createAnswer();
-			await store.state.peerConnection.setLocalDescription(answer);
+			try {
+				await store.state.peerConnection.setRemoteDescription(
+					new RTCSessionDescription(offer)
+				);
+				isRemoteDescriptionSet = true;
 
-			socket.emit("webrtc:answer", {
-				sender: target,
-				target: sender,
-				answer,
-			});
+				for (const c of pendingCandidates) {
+					try {
+						await store.state.peerConnection.addIceCandidate(new RTCIceCandidate(c));
+					} catch (e) {
+						console.warn("Nie udało się dodać buforowanego ICE candidate:", e);
+					}
+				}
+				pendingCandidates.length = 0;
+
+				const answer = await store.state.peerConnection.createAnswer();
+				if (!answer) {
+					console.error("❌ createAnswer() zwróciło null lub undefined!");
+					return;
+				}
+				await store.state.peerConnection.setLocalDescription(answer);
+
+				socket.emit("webrtc:answer", {
+					sender: target,
+					target: sender,
+					answer,
+				});
+			} catch (error) {
+				console.error("❌ Błąd podczas tworzenia odpowiedzi WebRTC:", error);
+			}
 		});
 
 		socket.on("webrtc:answer", async ({sender, answer}) => {
@@ -263,13 +296,28 @@ export default defineComponent({
 			}
 		});
 
+		const pendingCandidates: RTCIceCandidateInit[] = [];
+
 		socket.on("webrtc:ice-candidate", async ({sender, candidate}) => {
 			if (store.state.peerConnection) {
-				await store.state.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+				const rtc = store.state.peerConnection;
+
+				if (isRemoteDescriptionSet) {
+					try {
+						await rtc.addIceCandidate(new RTCIceCandidate(candidate));
+					} catch (e) {
+						console.warn(
+							"Nie udało się dodać ICE candidate od razu, wrzucam do bufora:",
+							e
+						);
+						pendingCandidates.push(candidate);
+					}
+				} else {
+					console.log("RemoteDescription niegotowa, buforuję ICE candidate");
+					pendingCandidates.push(candidate);
+				}
 			}
 		});
-
-		let broadcastersInterval: number | null = null;
 
 		onMounted(() => {
 			registerWebRTC();

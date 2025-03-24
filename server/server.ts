@@ -1,3 +1,6 @@
+import twilio from "twilio";
+import dotenv from "dotenv";
+dotenv.config();
 import _ from "lodash";
 import {Server as wsServer} from "ws";
 import express, {NextFunction, Request, Response} from "express";
@@ -88,6 +91,35 @@ export default async function (
 	if (options.dev) {
 		(await import("./plugins/dev-server")).default(app);
 	}
+
+	// Endpoint do pobierania ICE serwerów z Twilio
+
+	app.get("/api/get-twilio-ice", async (_req, res) => {
+		const accountSid = process.env.TWILIO_SID;
+		const authToken = process.env.TWILIO_TOKEN;
+
+		if (!accountSid || !authToken) {
+			console.error("❌ TWILIO_SID lub TWILIO_TOKEN nie są ustawione.");
+			return res.status(500).json({error: "Brak konfiguracji Twilio"});
+		}
+
+		const client = twilio(accountSid, authToken);
+
+		try {
+			const token = await client.tokens.create();
+			const defaultRtcConfig = {
+				iceServers: token.iceServers,
+				iceTransportPolicy: "all" as const,
+			};
+			res.json({
+				iceServers: defaultRtcConfig.iceServers,
+				rtcConfig: defaultRtcConfig,
+			});
+		} catch (err) {
+			console.error("❌ Twilio error:", err);
+			res.status(500).json({error: "Failed to fetch ICE servers"});
+		}
+	});
 
 	app.set("env", "production")
 		.disable("x-powered-by")
@@ -485,8 +517,33 @@ function initializeClient(
 		}
 	});
 
-	socket.on("webrtc:register", (data) => {
+	socket.on("webrtc:register", async (data) => {
 		userSockets.set(data.username, socket.id);
+		const accountSid = process.env.TWILIO_SID;
+		const authToken = process.env.TWILIO_TOKEN;
+
+		if (accountSid && authToken) {
+			const clientTwilio = twilio(accountSid, authToken);
+
+			try {
+				const token = await clientTwilio.tokens.create();
+				const iceServers = token.iceServers.filter(
+					(srv) => typeof srv.urls === "string" || Array.isArray(srv.urls)
+				);
+				const rtcConfig = {
+					iceServers: iceServers.map((s) => ({
+						urls: s.urls ?? "",
+						username: s.username,
+						credential: s.credential,
+					})),
+					iceTransportPolicy: "all" as const,
+				};
+				socket.emit("webrtc:rtc-config", {rtcConfig});
+				console.log("Wysłano rtcConfig do klienta:", JSON.stringify(rtcConfig, null, 2));
+			} catch (err) {
+				console.error("❌ Błąd przy pobieraniu ICE z Twilio:", err);
+			}
+		}
 		console.log(`Użytkownik ${data.username} zarejestrowany pod socketem ${socket.id}`);
 	});
 
@@ -511,11 +568,16 @@ function initializeClient(
 			// Jeśli mamy zapisane ICE candidates, wysyłamy je od razu do widza
 			if (userIceCandidates.has(target)) {
 				userIceCandidates.get(target)!.forEach((candidate) => {
-					socket.emit("webrtc:ice-candidate", {
-						sender: target,
-						target: sender,
-						candidate,
-					});
+					const senderSocketId = userSockets.get(sender);
+
+					if (senderSocketId) {
+						socket.to(senderSocketId).emit("webrtc:ice-candidate", {
+							sender: target,
+							target: sender,
+							candidate,
+						});
+					}
+
 					console.log(
 						`Wysłano wcześniej zapisany ICE Candidate od ${target} do ${sender}`
 					);
