@@ -48,7 +48,8 @@ export type State = {
 	isAutoCompleting: boolean;
 	isConnected: boolean;
 	networks: ClientNetwork[];
-	peerConnection: RTCPeerConnection | null;
+	incomingPeerConnections: Record<string, RTCPeerConnection>; // Zmieniono na Record<string, RTCPeerConnection>
+	outgoingPeerConnections: Record<string, RTCPeerConnection>; // Zmieniono na Record<string, RTCPeerConnection>
 	localStream: MediaStream | null; // Dodano localStream
 	remoteVideo: HTMLVideoElement | null; // Dodano remoteVideo
 	// TODO: type
@@ -110,7 +111,8 @@ const state = (): State => ({
 	messageSearchResults: null,
 	messageSearchPendingQuery: null,
 	searchEnabled: false,
-	peerConnection: null,
+	incomingPeerConnections: {}, // Inicjalizacja incomingPeerConnections jako pusty obiekt
+	outgoingPeerConnections: {}, // Inicjalizacja outgoingPeerConnections jako pusty obiekt
 	localStream: null, // Inicjalizacja localStream
 	remoteVideo: null, // Inicjalizacja remoteVideo
 });
@@ -215,8 +217,18 @@ type Mutations = {
 	isConnected(state: State, payload: State["isConnected"]): void;
 	networks(state: State, networks: State["networks"]): void;
 	mentions(state: State, mentions: State["mentions"]): void;
-
 	removeNetwork(state: State, networkUuid: string): void;
+	addIncomingPeerConnection(
+		state: State,
+		{sender, connection}: {sender: string; connection: RTCPeerConnection}
+	): void; // Dodano mutację dla addIncomingPeerConnection
+	addOutgoingPeerConnection(
+		state: State,
+		{target, connection}: {target: string; connection: RTCPeerConnection}
+	): void; // Dodano mutację dla addOutgoingPeerConnection
+	removeIncomingPeerConnection(state: State, sender: string): void; // Dodano mutację dla removeIncomingPeerConnection
+	removeOutgoingPeerConnection(state: State, target: string): void; // Dodano mutację dla removeOutgoingPeerConnection
+
 	sortNetworks(
 		state: State,
 		sortFn: (a: State["networks"][0], b: State["networks"][0]) => number
@@ -240,9 +252,6 @@ type Mutations = {
 	messageSearchPendingQuery(state: State, value: State["messageSearchPendingQuery"]): void;
 	messageSearchResults(state: State, value: State["messageSearchResults"]): void;
 	addMessageSearchResults(state: State, value: NonNullable<State["messageSearchResults"]>): void;
-	localStream(state: State, payload: MediaStream | null): void; // Dodano mutację dla localStream
-	remoteVideo(state: State, payload: HTMLVideoElement | null): void; // Dodano mutację dla remoteVideo
-	peerConnection(state: State, payload: RTCPeerConnection | null): void;
 };
 
 const mutations: Mutations = {
@@ -273,16 +282,17 @@ const mutations: Mutations = {
 	mentions(state, mentions) {
 		state.mentions = mentions;
 	},
-	localStream(state, payload) {
-		// Implementacja mutacji dla localStream
-		state.localStream = payload;
+	addIncomingPeerConnection(state, {sender, connection}) {
+		state.incomingPeerConnections[sender] = connection;
 	},
-	remoteVideo(state, payload) {
-		// Implementacja mutacji dla remoteVideo
-		state.remoteVideo = payload;
+	addOutgoingPeerConnection(state, {target, connection}) {
+		state.outgoingPeerConnections[target] = connection;
 	},
-	peerConnection(state, payload: RTCPeerConnection | null) {
-		state.peerConnection = payload;
+	removeIncomingPeerConnection(state, sender) {
+		delete state.incomingPeerConnections[sender];
+	},
+	removeOutgoingPeerConnection(state, target) {
+		delete state.outgoingPeerConnections[target];
 	},
 	removeNetwork(state, networkId) {
 		state.networks.splice(

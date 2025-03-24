@@ -1,6 +1,3 @@
-import twilio from "twilio";
-import dotenv from "dotenv";
-dotenv.config();
 import _ from "lodash";
 import {Server as wsServer} from "ws";
 import express, {NextFunction, Request, Response} from "express";
@@ -65,7 +62,7 @@ export type Server = ioServer<
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
-const userSockets = new Map<string, string>(); // Mapowanie user -> socketId
+const userSockets = new Map<string, {socketId: string; cameraOn: boolean}>(); // Mapowanie user -> socketId and camera status
 const userIceCandidates = new Map<string, any[]>(); // Przechowywanie publicznych ICE candidates
 
 let manager: ClientManager | null = null;
@@ -93,33 +90,6 @@ export default async function (
 	}
 
 	// Endpoint do pobierania ICE serwerów z Twilio
-
-	app.get("/api/get-twilio-ice", async (_req, res) => {
-		const accountSid = process.env.TWILIO_SID;
-		const authToken = process.env.TWILIO_TOKEN;
-
-		if (!accountSid || !authToken) {
-			console.error("❌ TWILIO_SID lub TWILIO_TOKEN nie są ustawione.");
-			return res.status(500).json({error: "Brak konfiguracji Twilio"});
-		}
-
-		const client = twilio(accountSid, authToken);
-
-		try {
-			const token = await client.tokens.create();
-			const defaultRtcConfig = {
-				iceServers: token.iceServers,
-				iceTransportPolicy: "all" as const,
-			};
-			res.json({
-				iceServers: defaultRtcConfig.iceServers,
-				rtcConfig: defaultRtcConfig,
-			});
-		} catch (err) {
-			console.error("❌ Twilio error:", err);
-			res.status(500).json({error: "Failed to fetch ICE servers"});
-		}
-	});
 
 	app.set("env", "production")
 		.disable("x-powered-by")
@@ -492,8 +462,8 @@ function initializeClient(
 	socket.on("disconnect", function () {
 		process.nextTick(() => client.clientDetach(socket.id));
 
-		for (const [user, id] of userSockets.entries()) {
-			if (id === socket.id) {
+		for (const [user, {socketId}] of userSockets.entries()) {
+			if (socketId === socket.id) {
 				userSockets.delete(user);
 				console.log(`Użytkownik ${user} rozłączony`);
 				break;
@@ -517,47 +487,81 @@ function initializeClient(
 		}
 	});
 
-	socket.on("webrtc:register", async (data) => {
-		userSockets.set(data.username, socket.id);
-		const accountSid = process.env.TWILIO_SID;
-		const authToken = process.env.TWILIO_TOKEN;
-
-		if (accountSid && authToken) {
-			const clientTwilio = twilio(accountSid, authToken);
-
-			try {
-				const token = await clientTwilio.tokens.create();
-				const iceServers = token.iceServers.filter(
-					(srv) => typeof srv.urls === "string" || Array.isArray(srv.urls)
-				);
-				const rtcConfig = {
-					iceServers: iceServers.map((s) => ({
-						urls: s.urls ?? "",
-						username: s.username,
-						credential: s.credential,
-					})),
-					iceTransportPolicy: "all" as const,
-				};
-				socket.emit("webrtc:rtc-config", {rtcConfig});
-				console.log("Wysłano rtcConfig do klienta:", JSON.stringify(rtcConfig, null, 2));
-			} catch (err) {
-				console.error("❌ Błąd przy pobieraniu ICE z Twilio:", err);
-			}
+	socket.on("webrtc:camera-on", ({username}) => {
+		const userEntry = userSockets.get(username);
+		if (userEntry) {
+			userEntry.cameraOn = true;
+			userSockets.set(username, userEntry);
+			console.log(`📷 Kamera włączona przez użytkownika ${username}`);
 		}
+	});
+	socket.on("webrtc:camera-off", ({username}) => {
+		const userEntry = userSockets.get(username);
+		if (userEntry) {
+			userEntry.cameraOn = false;
+			userSockets.set(username, userEntry);
+			console.log(`📷 Kamera wyłączona przez użytkownika ${username}`);
+		}
+	});
+
+	socket.on("webrtc:register", async (data) => {
+		userSockets.set(data.username, {socketId: socket.id, cameraOn: false});
+
+		const crypto = require("crypto");
+
+		function generateTurnToken(username: string, ttlSeconds: number, secret: string) {
+			const unixTime = Math.floor(Date.now() / 1000) + ttlSeconds;
+			const usernameWithTs = `${unixTime}:${username}`;
+			const hmac = crypto.createHmac("sha1", secret);
+			hmac.update(usernameWithTs);
+			const credential = hmac.digest("base64");
+
+			return {
+				username: usernameWithTs,
+				credential,
+			};
+		}
+
+		const turnSecret = "supersecretstring123"; // Zmień na swój sekret z coturn
+		const ttl = 3600;
+		const {username: turnUsername, credential: turnCredential} = generateTurnToken(
+			data.username,
+			ttl,
+			turnSecret
+		);
+
+		const rtcConfig = {
+			iceServers: [
+				{
+					urls: "stun:stun.chatik.pl:3478",
+				},
+				{
+					urls: "turn:turn.chatik.pl:3478",
+					username: turnUsername,
+					credential: turnCredential,
+				},
+			],
+			iceTransportPolicy: "all" as const,
+		};
+
+		socket.emit("webrtc:rtc-config", {rtcConfig});
+		console.log("Wysłano rtcConfig z tokenem do klienta:", JSON.stringify(rtcConfig, null, 2));
 		console.log(`Użytkownik ${data.username} zarejestrowany pod socketem ${socket.id}`);
 	});
 
 	socket.on("webrtc:get-broadcasters", () => {
-		const broadcasters = Array.from(userSockets.keys());
+		const broadcasters = Array.from(userSockets.entries())
+			.filter(([_, value]) => value.cameraOn)
+			.map(([username]) => username);
+
 		socket.emit("webrtc:broadcasters-list", {broadcasters});
-		console.log(`Wysłano listę nadawców: ${broadcasters.join(", ")}`);
 	});
 
 	socket.on("webrtc:request-stream", ({sender, target}) => {
 		console.log(`Użytkownik ${sender} prosi o stream od ${target}`);
 
 		if (userSockets.has(target)) {
-			const targetSocketId = userSockets.get(target)!;
+			const targetSocketId = userSockets.get(target)!.socketId;
 			console.log(
 				`Sprawdzanie obecności użytkownika ${target} w userSockets:`,
 				userSockets.has(target)
@@ -568,7 +572,7 @@ function initializeClient(
 			// Jeśli mamy zapisane ICE candidates, wysyłamy je od razu do widza
 			if (userIceCandidates.has(target)) {
 				userIceCandidates.get(target)!.forEach((candidate) => {
-					const senderSocketId = userSockets.get(sender);
+					const senderSocketId = userSockets.get(sender)?.socketId;
 
 					if (senderSocketId) {
 						socket.to(senderSocketId).emit("webrtc:ice-candidate", {
@@ -594,28 +598,37 @@ function initializeClient(
 	});
 
 	socket.on("webrtc:offer", (data) => {
-		console.log(`Otrzymano ofertę WebRTC od ${socket.id} dla ${data.target}`);
+		console.log(`Otrzymano ofertę WebRTC od ${data.sender} dla ${data.target}`);
 
 		if (userSockets.has(data.target)) {
-			const targetSocketId = userSockets.get(data.target)!;
+			const targetSocketId = userSockets.get(data.target)!.socketId;
 			socket.to(targetSocketId).emit("webrtc:offer", {
-				sender: socket.id,
+				sender: data.sender,
 				target: data.target,
 				offer: data.offer,
 			});
-			console.log(`Wysłano ofertę WebRTC od ${socket.id} do ${data.target}`);
+			console.log(`Wysłano ofertę WebRTC od ${data.sender} do ${data.target}`);
 		} else {
 			console.log(`Nie znaleziono użytkownika ${data.target}, oferta WebRTC odrzucona.`);
 		}
 	});
 
 	socket.on("webrtc:answer", (data) => {
+		console.log(`Odebrano answer od ${data.sender} dla ${data.target}`);
+		//console.log("Answer SDP:", data.answer?.sdp || "[brak SDP]");
+
 		if (userSockets.has(data.target)) {
-			socket.to(userSockets.get(data.target)!).emit("webrtc:answer", {
-				sender: socket.id,
+			const targetSocketId = userSockets.get(data.target)!.socketId;
+			socket.to(targetSocketId).emit("webrtc:answer", {
+				sender: data.sender,
 				target: data.target,
 				answer: data.answer,
 			});
+			console.log(
+				`Przekazano answer od ${data.sender} [${socket.id}] do ${data.target} [${targetSocketId}]`
+			);
+		} else {
+			console.warn(`Nie znaleziono targetu ${data.target} dla answer`);
 		}
 	});
 
@@ -624,8 +637,8 @@ function initializeClient(
 		// Znajdź nazwę użytkownika przypisaną do tego socketu
 		let username: string | null = null;
 
-		for (const [user, sockId] of userSockets.entries()) {
-			if (sockId === socket.id) {
+		for (const [user, {socketId}] of userSockets.entries()) {
+			if (socketId === socket.id) {
 				username = user;
 				break;
 			}

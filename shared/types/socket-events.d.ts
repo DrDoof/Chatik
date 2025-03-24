@@ -212,7 +212,11 @@ interface ClientToServerEvents {
 	search: EventHandler<SearchQuery>;
 
 	"webrtc:register": EventHandler<{username: string}>;
-	"webrtc:offer": EventHandler<{target: string; offer: RTCSessionDescriptionInit}>;
+	"webrtc:offer": EventHandler<{
+		sender: string;
+		target: string;
+		offer: RTCSessionDescriptionInit;
+	}>;
 	"webrtc:answer": EventHandler<{
 		sender: string;
 		target: string;
@@ -225,6 +229,8 @@ interface ClientToServerEvents {
 	}>;
 	"webrtc:get-broadcasters": NoPayloadEventHandler;
 	"webrtc:request-stream": EventHandler<{sender: string; target: string}>;
+	"webrtc:camera-on": EventHandler<{username: string}>;
+	"webrtc:camera-off": EventHandler<{username: string}>;
 }
 
 interface InterServerEvents {}
