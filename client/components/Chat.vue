@@ -208,6 +208,8 @@
 	font-weight: bold;
 	padding: 5px 10px;
 	border-bottom: 1px solid #ccc;
+	position: relative;
+	user-select: none;
 }
 
 .close-webrtc {
@@ -381,6 +383,7 @@ export default defineComponent({
 					header.style.cursor = "move";
 
 					header.addEventListener("mousedown", (e) => {
+						e.preventDefault(); // <== to jest ważne
 						isDragging = true;
 						offsetX = e.clientX - el.offsetLeft;
 						offsetY = e.clientY - el.offsetTop;
