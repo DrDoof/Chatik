@@ -76,12 +76,12 @@
 						/>
 					</span>
 				</div>
-				<div v-if="showWebRTC" class="webrtc-overlay" ref="webrtcOverlay">
+				<div v-show="showWebRTC" class="webrtc-overlay" ref="webrtcOverlay">
 					<div class="webrtc-overlay-header">
 						<span>WebRTC Kamera</span>
-						<button @click="toggleWebRTC" class="close-webrtc">❌</button>
+						<button class="close-webrtc" @click="toggleWebRTC">❌</button>
 					</div>
-					<WebRtcCamera :network="network" class="window" />
+					<WebRtcCamera v-if="showWebRTC" :network="network" class="window" />
 				</div>
 				<div v-if="channel.type === 'special'" class="chat-content">
 					<div class="chat">
@@ -177,17 +177,19 @@
 }
 
 .webrtc-overlay {
-	position: fixed;
-	top: 100px;
-	left: 100px;
 	width: 800px;
 	height: 550px;
 	background: rgba(0, 0, 0, 0.9);
 	display: flex;
 	flex-direction: column;
-	z-index: 1000;
 	border-radius: 5px;
+	border: 1px solid #444;
 	overflow: hidden;
+	box-sizing: border-box;
+	position: fixed;
+	top: 100px;
+	left: 100px;
+	pointer-events: auto !important;
 }
 
 .webrtc-overlay > .window {
@@ -210,6 +212,9 @@
 	border-bottom: 1px solid #ccc;
 	position: relative;
 	user-select: none;
+	cursor: move;
+	border: 2px dashed limegreen !important;
+	background: rgba(0, 255, 0, 0.1);
 }
 
 .close-webrtc {
@@ -371,40 +376,44 @@ export default defineComponent({
 				});
 			}
 
-			if (webrtcOverlay.value) {
+			nextTick(() => {
 				const el = webrtcOverlay.value;
+				if (!el) return;
+
 				const header = el.querySelector(".webrtc-overlay-header") as HTMLElement | null;
+				if (!header) return;
 
-				let isDragging = false;
-				let offsetX = 0;
-				let offsetY = 0;
+				header.style.cursor = "move";
+				console.log("[debug] mousedown listener added to header");
 
-				if (header) {
-					header.style.cursor = "move";
+				header.addEventListener("mousedown", (e) => {
+					console.log("[mousedown] nagłówek kliknięty");
+					e.preventDefault();
 
-					header.addEventListener("mousedown", (e) => {
-						e.preventDefault(); // <== to jest ważne
-						isDragging = true;
-						offsetX = e.clientX - el.offsetLeft;
-						offsetY = e.clientY - el.offsetTop;
-					});
+					const rect = el.getBoundingClientRect();
+					const offsetX = e.clientX - rect.left;
+					const offsetY = e.clientY - rect.top;
 
-					document.addEventListener("mousemove", (e) => {
-						if (isDragging) {
-							el.style.left = `${e.clientX - offsetX}px`;
-							el.style.top = `${e.clientY - offsetY}px`;
-						}
-					});
+					const onMouseMove = (moveEvent: MouseEvent) => {
+						console.log(
+							"[mousemove] aktualizacja pozycji:",
+							moveEvent.clientX,
+							moveEvent.clientY
+						);
+						el.style.left = `${moveEvent.clientX - offsetX}px`;
+						el.style.top = `${moveEvent.clientY - offsetY}px`;
+					};
 
-					document.addEventListener("mouseup", () => {
-						isDragging = false;
-					});
-				}
+					const onMouseUp = () => {
+						console.log("[mouseup]");
+						window.removeEventListener("mousemove", onMouseMove);
+						window.removeEventListener("mouseup", onMouseUp);
+					};
 
-				el.style.position = "fixed";
-				el.style.left = "100px";
-				el.style.top = "100px";
-			}
+					window.addEventListener("mousemove", onMouseMove);
+					window.addEventListener("mouseup", onMouseUp);
+				});
+			});
 		});
 
 		return {
